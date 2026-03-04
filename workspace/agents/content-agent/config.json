@@ -1,0 +1,24 @@
+{
+  "generation": {
+    "default_platform": "小红书",
+    "default_style": "轻松",
+    "default_tone": "友好",
+    "default_length": 180
+  },
+  "platforms": {
+    "小红书": {
+      "min_length": 100,
+      "max_length": 200,
+      "emoji": true
+    },
+    "抖音": {
+      "min_duration": 15,
+      "max_duration": 60,
+      "fps": 30
+    },
+    "微信": {
+      "min_length": 800,
+      "max_length": 3000
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "analysis": {
+    "default_style": "轻松",
+    "default_tone": "友好",
+    "default_platform": "小红书"
+  },
+  "quality": {
+    "default_threshold": 85,
+    "min_length": 100,
+    "max_length": 200
+  }
+}
