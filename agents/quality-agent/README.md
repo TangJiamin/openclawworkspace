@@ -1,5 +1,7 @@
 # Quality Agent - 质量审核智能体
 
+## ⭐ 核心原则\n**quality-agent 遵循 [OpenClaw 核心原则](../CORE-PRINCIPLES.md)**：\n- 第一性原理思考\n- 长期主义\n- Skill/Heartbeat 优先\n
+
 多维度质量检查和合规审核智能体，确保内容符合平台规范和用户要求。
 
 ## 核心能力

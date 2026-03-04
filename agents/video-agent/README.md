@@ -1,5 +1,7 @@
 # Video Agent - 视频生成智能体
 
+## ⭐ 核心原则\n**video-agent 遵循 [OpenClaw 核心原则](../CORE-PRINCIPLES.md)**：\n- 第一性原理思考\n- 长期主义\n- Skill/Heartbeat 优先\n
+
 生成高质量视频，支持 Seedance API 和 Refly Canvas 两种方式。
 
 ## 快速开始
