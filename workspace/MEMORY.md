@@ -48,6 +48,7 @@
 **创建的文件**:
 - `workspace/skills/daily-summary/SKILL.md`: 每日总结 Skill 规范
 - `workspace/skills/daily-summary/scripts/generate-v2.sh`: 智能分析脚本（v2.0）
+- `workspace/skills/agent-optimizer/SKILL.md`: Agent 优化检查器
 - `workspace/memory/DAILY-LEARNING-SCHEDULE.md`: 完整时间设计文档
 
 **智能分析脚本功能**:
@@ -85,6 +86,7 @@ Main Agent (协调者)
 - ai-daily-digest ✅ - 资讯收集工具（90个顶级技术博客）
 - metaso-search ✅ - 网络搜索工具（时效性强化）
 - daily-summary ✅ - 每日总结工具（智能分析）
+- agent-optimizer ✅ - Agent 优化检查器
 
 ### 学习的技能
 
@@ -184,9 +186,44 @@ Main Agent (协调者)
 3. 更简单的维护：统一的工作流程
 4. 统一的调用方式：Agent 可以调用，Heartbeat 定期执行
 
-**示例**:
-- ❌ 错误：`/scripts/auto-update-agents.sh`（独立脚本）
-- ✅ 正确：`/workspace/skills/capability-updater/SKILL.md`（Skill）
+---
+
+### ⚠️ 关键要求：Agent 核心文件职责分离（2026-03-04 17:13）⭐
+
+**基于 OpenClaw 官方文档**: https://docs.openclaw.ai/concepts/agent-workspace
+
+**每个文件有明确的职责**：
+
+| 文件 | 谁读它？ | 目的 | 性质 |
+|-----|---------|------|------|
+| **SOUL.md** | Agent自己 | "我是谁" | 本质/个性/行为准则 |
+| **IDENTITY.md** | Agent自己 | "我叫什么" | 元数据（名字、emoji、avatar） |
+| **USER.md** | Agent自己 | "用户是谁" | 上下文（偏好、项目） |
+| **README.md** | 开发者/用户 | "如何使用我" | 技术文档 |
+| **AGENTS.md** | Agent自己 | "同事是谁" | 协作文档 |
+| **TOOLS.md** | Agent自己 | "用什么工具" | 参考手册 |
+
+**关键区别**:
+- **SOUL.md** = "我是谁"（本质、个性、行为准则）
+- **IDENTITY.md** = "我叫什么"（元数据）
+- **USER.md** = "用户是谁"（上下文）
+- **README.md** = "如何使用我"（技术说明）
+
+**不应该**:
+- ❌ 创建"中心化原则"文件（如 SYSTEM-PRINCIPLES.md、CORE-PRINCIPLES.md）
+- ❌ 混淆文件职责
+- ❌ 重复内容
+- ❌ 破坏职责分离
+
+**应该**:
+- ✅ 每个文件有明确的职责
+- ✅ Agent 自己读的文件 vs 开发者读的文件
+- ✅ 单一数据源（SOUL.md 和 MEMORY.md）
+- ✅ 不创建冗余的索引文件
+
+**历史教训**:
+- SYSTEM-PRINCIPLES.md (已删除) - 冗余的索引文件
+- CORE-PRINCIPLES.md (已删除) - 重复的原则文件
 
 ---
 
