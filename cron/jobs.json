@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "40b82aef-afe0-4ad2-bb2e-780279eae182",
+      "name": "每日清理任务",
+      "enabled": true,
+      "createdAtMs": 1772586456578,
+      "updatedAtMs": 1772586456578,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 3 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行每日清理任务：清理 .openclaw 目录中的无用文件，保持容器干净整洁"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      }
+    },
+    {
+      "id": "daily-summary-reflection",
+      "name": "每日总结反思",
+      "enabled": true,
+      "createdAtMs": 1772613485917,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 21 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行每日总结和自我反思任务\n\n任务目标：\n1. 扫描今日记忆 (17:00-21:00 工作内容)\n2. 自我反思：识别可进化的能力和方向\n3. 生成针对性学习计划\n\n保存到 memory/daily-summary/YYYY-MM-DD.md",
+        "thinking": "on",
+        "timeoutSeconds": 900
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "feishu"
+      }
+    },
+    {
+      "id": "daily-directed-learning",
+      "name": "定向学习",
+      "enabled": true,
+      "createdAtMs": 1772613486917,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 21 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行定向学习任务\n\n## 核心原则\n不盲目学习，而是基于清晰的自我认知，针对性地提升能力\n\n## 学习途径\n1. OpenClaw 官网 - 官方文档和规范\n2. ClawHub - 社区贡献的 Skills\n3. GitHub 开源项目 - AI 工具和框架\n\n## 学习目的\n将开源的优秀的技能和想法以及官方的规范转换为你自己实际可用的能力\n\n## 执行步骤\nStep 1: 自我认知（5分钟）- 基于每日总结评估当前能力\nStep 2: 目标设定（5分钟）- 明确学习目标和预期成果\nStep 3: 定向学习（60-90分钟）- 选择途径深度学习\nStep 4: 能力转换（30-60分钟）- 转换为实际能力（Skill/Agent）\nStep 5: Agent 优化检查（重要！）\n- 如果学习到新技能，自动运行: bash /home/node/.openclaw/workspace/skills/agent-optimizer/scripts/check.sh\n- 检查现有 Agent 是否需要更新优化\n- 生成详细的优化建议报告\n- 发送报告给用户确认\nStep 6: 实践验证（15分钟）- 测试和验证\n\n## Agent 优化检查流程\n当学习到新技能时，自动触发优化检查器：\n1. 扫描所有 6 个 Agent\n2. 检查是否需要更新优化\n3. 生成详细的优化建议\n4. 通过飞书发送报告\n5. 等待用户确认\n6. 自动应用优化（用户确认后）\n\n详细指导见：/tmp/directed-learning-payload.md\n优化检查器见：/home/node/.openclaw/workspace/skills/agent-optimizer/SKILL.md",
+        "thinking": "on",
+        "timeoutSeconds": 9000
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "feishu"
+      }
+    },
+    {
+      "id": "daily-deep-review",
+      "name": "深度回顾",
+      "enabled": true,
+      "createdAtMs": 1772613487917,
+      "schedule": {
+        "kind": "cron",
+        "expr": "59 23 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行深度回顾任务\n\n任务目标：\n1. 评估每日总结完成情况\n2. 评估定向学习完成情况\n3. 评估今日整体表现\n4. 识别亮点和不足\n5. 规划明天重点\n\n更新明日目标",
+        "thinking": "on",
+        "timeoutSeconds": 900
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "feishu"
+      }
+    }
+  ]
+}

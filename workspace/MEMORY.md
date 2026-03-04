@@ -10,7 +10,6 @@
 - **Skill 创建指南** - `docs/SKILL-CREATION-GUIDE.md`
 - **Agent 矩阵规划** - `docs/AGENT-MATRIX-REPLAN.md`
 - **快速参考** - `TOOLS.md`
-- **系统原则** - `SYSTEM-PRINCIPLES.md`
 
 ---
 
@@ -188,8 +187,6 @@ Main Agent (协调者)
 **示例**:
 - ❌ 错误：`/scripts/auto-update-agents.sh`（独立脚本）
 - ✅ 正确：`/workspace/skills/capability-updater/SKILL.md`（Skill）
-
-**完整文档**: `SYSTEM-PRINCIPLES.md`
 
 ---
 

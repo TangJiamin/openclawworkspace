@@ -1,0 +1,17 @@
+{
+  "name": "refly-visual-designer-hook",
+  "version": "1.0.0",
+  "description": "Refly 视觉设计工作流集成 Hook",
+  "main": "dist/handler.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

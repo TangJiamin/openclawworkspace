@@ -46,6 +46,19 @@ auth-profiles.json
 dist/
 build/
 
+# 保留 workspace 目录和子目录（但排除临时文件）
+!workspace/**/*.md
+!workspace/**/*.sh
+!workspace/**/SKILL.md
+!workspace/**/scripts/
+
+# 但排除 workspace 中的临时文件
+workspace/*/*.tmp
+workspace/*/*.temp
+workspace/*/*.log
+workspace/*/sessions/
+workspace/*/.backup/
+
 # 保留核心文档
 !workspace/SYSTEM-PRINCIPLES.md
 !workspace/MEMORY.md

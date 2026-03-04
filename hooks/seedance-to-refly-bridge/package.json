@@ -1,0 +1,21 @@
+{
+  "name": "seedance-to-refly-bridge",
+  "version": "1.0.0",
+  "description": "自动桥接 Seedance Skill 到 Refly 工作流 - 完全自动化视频生成",
+  "author": "OpenClaw AI",
+  "license": "MIT",
+  "main": "handler.ts",
+  "scripts": {
+    "start": "node dist/handler.js",
+    "build": "tsc",
+    "dev": "ts-node handler.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.0.0"
+  }
+}

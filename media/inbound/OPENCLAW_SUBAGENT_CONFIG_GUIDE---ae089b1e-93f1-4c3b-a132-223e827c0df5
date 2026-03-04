@@ -1,0 +1,213 @@
+# OpenClaw 多智能体配置修改指南（官方规范版）
+
+## 1. 文档目标
+
+本指南用于指导你在不依赖现有历史配置的前提下，按 OpenClaw 官方规范重构多智能体（主智能体 + 子智能体）配置。
+
+适用场景：
+- 需要从现有配置迁移到规范结构
+- 需要明确 `workspace`、`agentDir`、`session`、`subagents` 的职责边界
+- 需要避免会话污染、状态冲突、路径混乱
+
+
+## 2. 官方规范核心原则
+
+1. 每个 `agentId` 必须唯一。
+2. 每个智能体必须有唯一 `agentDir`，禁止多个智能体共享同一 `agentDir`。
+3. `agentDir` 与 `workspace` 职责分离：
+   - `agentDir`：智能体状态/认证/运行态文件
+   - `workspace`：业务文件、提示词文件、脚本、产物
+4. 子智能体调用权限由 `subagents.allowAgents` 显式控制。
+5. 会话策略由 `session` 统一控制，`/new` 等重置触发器统一维护在 `session.resetTriggers`。
+6. 主 agent 可直接使用 `agents.defaults.workspace`，无需为 `main` 单独设置专门 `workspace`。
+
+
+## 3. 推荐目录结构（规范化）
+
+```text
+~/.openclaw/
+├─ openclaw.json
+├─ agents/
+│  ├─ main/
+│  │  ├─ agent/            # main 的 agentDir
+│  │  └─ sessions/
+│  ├─ research/
+│  │  ├─ agent/            # research 的 agentDir
+│  │  ├─ sessions/
+│  │  └─ workspace/
+│  │     ├─ AGENTS.md
+│  │     ├─ TOOLS.md
+│  │     └─ scripts/
+│  └─ writer/
+│     ├─ agent/
+│     ├─ sessions/
+│     └─ workspace/
+├─ workspace/              # 默认工作区（主 agent 直接使用这里）
+│  ├─ AGENTS.md
+│  ├─ TOOLS.md
+│  ├─ SOUL.md
+│  ├─ IDENTITY.md
+│  ├─ USER.md
+│  ├─ HEARTBEAT.md
+│  └─ scripts/
+└─ subagents/
+   └─ runs.json            # 运行注册表（自动维护）
+```
+
+
+## 4. 标准配置模板（可直接对照改）
+
+说明：以下为 JSON5 风格示例，实际写入 `openclaw.json` 时请使用合法 JSON。
+
+```json5
+{
+  "agents": {
+    "defaults": {
+      "workspace": "/home/node/.openclaw/workspace",
+      "model": { "primary": "default/glm-4.7" },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8,
+        "archiveAfterMinutes": 60
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "default": true,
+        "agentDir": "/home/node/.openclaw/agents/main/agent",
+        "subagents": {
+          "allowAgents": ["research", "writer"]
+        }
+      },
+      {
+        "id": "research",
+        "workspace": "/home/node/.openclaw/agents/research/workspace",
+        "agentDir": "/home/node/.openclaw/agents/research/agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": ["main"]
+        }
+      },
+      {
+        "id": "writer",
+        "workspace": "/home/node/.openclaw/agents/writer/workspace",
+        "agentDir": "/home/node/.openclaw/agents/writer/agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": ["main"]
+        }
+      }
+    ]
+  },
+
+  "session": {
+    "scope": "per-sender",
+    "dmScope": "per-channel-peer",
+    "resetTriggers": ["/new", "/reset"],
+    "mainKey": "main"
+  }
+}
+```
+
+
+## 5. 字段解释（重点）
+
+- `agents.defaults.workspace`
+  - 默认工作区，仅作为兜底。
+  - 主 agent 可以直接使用这个默认工作区，不必单独配置 `main.workspace`。
+
+- `agents.list[].workspace`
+  - 该 agent 的业务工作目录（文档、脚本、提示词）。
+  - 建议统一用：`/home/node/.openclaw/agents/<id>/workspace`。
+  - 子 agent 建议显式配置；主 agent 可省略。
+
+- `agents.list[].agentDir`
+  - 该 agent 的运行态目录。
+  - 强烈建议统一使用：`/home/node/.openclaw/agents/<id>/agent`。
+
+- `agents.list[].subagents.allowAgents`
+  - 允许调用的子智能体白名单。
+  - `main` 通常允许多个子智能体；普通子智能体建议仅允许回调 `main`。
+
+- `session.dmScope`
+  - `per-channel-peer` 可隔离不同渠道/对象的会话。
+
+- `session.resetTriggers`
+  - 会话重置触发命令，保留 `"/new"` 和 `"/reset"` 是常见规范。
+
+- `AGENTS.md` 与 `AGENT.md`
+  - OpenClaw 的标准 bootstrap 文件名是 `AGENTS.md`（复数）。
+  - `AGENT.md` 不作为官方标准入口，不保留。
+  - 主 agent 在默认工作区下维护 `AGENTS.md`、`TOOLS.md`。
+  - 子 agent 在各自 `workspace` 下维护 `AGENTS.md`、`TOOLS.md`。
+
+
+## 6. 迁移步骤（建议顺序）
+
+1. 备份当前配置：
+   - 备份 `~/.openclaw/openclaw.json`
+2. 先规范目录：
+   - 为每个 agent 创建独立 `agentDir` 与 `workspace`
+   - 主 agent 使用默认 `workspace`，子 agent 使用各自 `workspace`
+   - 在默认 `workspace` 与每个子 agent `workspace` 下创建 `AGENTS.md`、`TOOLS.md`
+3. 再改 `agents.list`：
+   - 主 agent 填充 `id/default/agentDir/subagents.allowAgents`
+   - 子 agent 填充 `id/workspace/agentDir/subagents.allowAgents`
+4. 最后改 `session`：
+   - 明确 `dmScope` 与 `resetTriggers`
+5. 重启网关并验证：
+   - 会话是否按预期分离
+   - 子智能体调用是否遵循白名单
+
+
+## 7. 校验与验证
+
+建议命令：
+
+```powershell
+docker compose restart openclaw-gateway
+docker compose logs --tail=200 openclaw-gateway
+```
+
+验证点：
+- 无 schema 校验错误
+- 无 `Duplicate agentDir detected` 报错
+- `main` 可调用允许的子智能体，不可调用未授权智能体
+- `/new` 能创建新会话
+
+
+## 8. 常见错误与修复
+
+1. 多个 agent 复用同一 `agentDir`
+- 现象：会话串扰、认证状态异常
+- 修复：每个 agent 指向独立目录
+
+2. 只配置了 `agents.defaults.workspace`，未为 agent 单独配置 `workspace`
+- 现象：多个 agent 写入同一工作区，文件相互污染
+- 修复：给每个 agent 显式配置 `workspace`
+
+3. `allowAgents` 缺失或配置过宽
+- 现象：不可控的 agent 间调用
+- 修复：按最小权限白名单配置
+
+4. 使用 `AGENT.md` 作为主配置文档
+- 现象：修改后不生效，提示词未按预期加载
+- 修复：改为 `AGENTS.md`（复数），并放在对应 agent 的 `workspace` 根目录
+
+
+## 9. 回滚策略
+
+若改动后异常：
+1. 用备份文件恢复 `openclaw.json`
+2. 重启网关
+3. 从日志定位冲突字段后小步重试
+
+
+## 10. 参考（官方文档）
+
+- https://docs.openclaw.ai/zh-CN/concepts/multi-agent
+- https://docs.openclaw.ai/zh-CN/tools/subagents
+- https://docs.openclaw.ai/zh-CN/concepts/session
+- https://docs.openclaw.ai/zh-CN/gateway/configuration
+- https://docs.openclaw.ai/zh-CN/concepts/agent

@@ -1,0 +1,39 @@
+{
+  "name": "openclaw-hook-refly-workflow-generator",
+  "version": "1.0.0",
+  "description": "Convert natural language to workflows using Refly AI",
+  "main": "handler.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "openclaw",
+    "hook",
+    "refly",
+    "workflow",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "openclaw": {
+    "type": "hook",
+    "hook": {
+      "name": "refly-workflow-generator",
+      "version": "1.0.0",
+      "description": "Natural language to workflow generator",
+      "events": [
+        "message"
+      ],
+      "permissions": [
+        "cron:read",
+        "cron:add",
+        "message:send"
+      ]
+    }
+  }
+}

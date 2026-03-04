@@ -1,0 +1,28 @@
+{
+  "providers": {
+    "default": {
+      "baseUrl": "https://open.bigmodel.cn/api/anthropic",
+      "apiKey": "97c45b5ead4dbb33c7d3771f2018c4d7.ZfTUteXnyQ400hT6",
+      "api": "anthropic-messages",
+      "models": [
+        {
+          "id": "glm-4.7",
+          "name": "glm-4.7",
+          "reasoning": false,
+          "input": [
+            "text",
+            "image"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192
+        }
+      ]
+    }
+  }
+}
