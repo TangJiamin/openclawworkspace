@@ -13,7 +13,7 @@ test-*
 # Agent 运行时文件
 **/sessions/
 **/.backup/
-**/{agent,workspace}/
+agents/**/{agent,workspace}/
 
 # 浏览器数据
 **/browser/user-data/
@@ -42,3 +42,13 @@ auth-profiles.json
 # 编译输出
 dist/
 build/
+
+# 保留核心文档
+!workspace/SYSTEM-PRINCIPLES.md
+!workspace/MEMORY.md
+!workspace/AGENTS.md
+!workspace/SOUL.md
+!workspace/IDENTITY.md
+!workspace/USER.md
+!workspace/HEARTBEAT.md
+!workspace/TOOLS.md
