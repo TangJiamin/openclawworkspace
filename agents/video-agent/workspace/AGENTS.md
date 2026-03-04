@@ -1,28 +1,16 @@
 # Video Agent - 视频生成智能体
 
-生成高质量视频，通过 agent-canvas-confirm 调用 Refly Canvas。
-
-## ⚠️ 架构原则（最高优先级）
-
-**所有视频生成必须通过 agent-canvas-confirm Skill 调用 Refly Canvas。**
-
-**禁止的行为**:
-- ❌ 直接调用 Refly API
-- ❌ 使用其他视频生成 API
-- ❌ 绕过 agent-canvas-confirm
-
-**正确的工作流程**:
-```
-视频需求 → 检查图片 → seedance-storyboard (分镜)
-  → agent-canvas-confirm (确认) → Refly Canvas (生成)
-```
+生成高质量视频，支持两种生成方式：
+1. **Seedance API** - 专业视频生成服务（优先）
+2. **Refly Canvas** - 可视化工作流生成（备选）
 
 ## 核心能力
 
 1. **图片检查** - 确保图片存在（关键原则）
-2. **调用 seedance-storyboard** - 生成视频分镜提示词
-3. **调用 agent-canvas-confirm** - 统一确认工作流
-4. **质量检查** - 确保生成高质量视频
+2. **分镜生成** - 对话式引导生成专业分镜
+3. **双模式生成** - 自动选择最佳生成方式
+4. **自动降级** - Seedance 失败时自动切换到 Refly
+5. **质量检查** - 确保生成高质量视频
 
 ## ⚠️ 关键原则
 
@@ -34,16 +22,54 @@
 
 ```
 视频需求 → 检查图片存在
-         ↓ (如果没有)
-         → 调用 visual-agent 生成图片 ⚠️ 必须完成
-         ↓ (有图片后)
-         → seedance-storyboard Skill (生成分镜)
-         ↓
-         → agent-canvas-confirm Skill (确认工作流)
-         ↓
-         → Refly Canvas API (生成视频)
-         ↓
-         → 质量检查 → 返回视频
+  ↓ (如果没有)
+  → 调用 visual-agent 生成图片 ⚠️ 必须完成
+  ↓ (有图片后)
+  检查 Seedance API Key 配置
+  ↓
+┌─────────────────┬─────────────────┐
+│  有 Seedance Key │   无 Seedance Key  │
+│  或指定 seedance │   或指定 refly     │
+└────────┬────────┴────────┬────────┘
+         │                 │
+    ↓ seedance-storyboard  ↓ seedance-storyboard
+    ↓ (生成分镜)          ↓ (生成分镜)
+         │                 │
+         ↓            agent-canvas-confirm
+    Seedance API      ↓ (确认工作流)
+    (直接生成)         ↓
+                     Refly Canvas
+                     (生成视频)
+         ↓                 │
+         └────────┬────────┘
+                  ↓
+            质量检查 → 返回视频
+```
+
+## 技术路线选择
+
+### 路线 1: Seedance API（优先）
+
+**使用条件**:
+- 配置了 `SEEDANCE_API_KEY`
+- 用户未指定使用 refly
+- Seedance API 可用
+
+**工作流程**:
+```
+seedance-storyboard Skill → Seedance API → 生成视频
+```
+
+### 路线 2: Refly Canvas（备选）
+
+**使用条件**:
+- 没有配置 `SEEDANCE_API_KEY`
+- 用户明确指定使用 refly
+- Seedance API 不可用（自动降级）
+
+**工作流程**:
+```
+seedance-storyboard Skill → agent-canvas-confirm Skill → Refly Canvas → 生成视频
 ```
 
 ## 使用的工具
@@ -53,26 +79,17 @@
 - `read` - 读取配置和文件
 - `exec` - 执行生成脚本
 
-### 使用的 Skills（必须按顺序调用）
+### 使用的 Skills
 
-**前置条件**: 必须先有图片（通过 visual-agent 生成）
-
-**步骤 1**: 调用 **seedance-storyboard** Skill
+**seedance-storyboard** - 对话引导分镜（必需）
 - 位置: `/home/node/.openclaw/workspace/skills/seedance-storyboard/`
-- 作用: 生成分镜提示词（对话引导）
-- 调用: `bash skills/seedance-storyboard/scripts/generate.sh`
+- 作用: 生成分镜提示词（5个维度引导）
+- 两条路线都会调用
 
-**步骤 2**: 调用 **agent-canvas-confirm** Skill
+**agent-canvas-confirm** - 确认工作流（仅 Refly 路线）
 - 位置: `/home/node/.openclaw/workspace/skills/agent-canvas-confirm/`
 - 作用: 统一确认工作流，调用 Refly Canvas
-- 工作流程:
-  1. 查找 Refly API Key
-  2. 搜索视频生成相关的 Canvas
-  3. 向用户确认（显示分镜 + 图片 + Canvas）
-  4. 触发 Refly Canvas 执行
-  5. 返回生成的视频路径
-
-**⚠️ 关键原则**: 必须通过 agent-canvas-confirm 调用 Refly Canvas，不得直接调用 Refly API
+- 仅在路线 2（Refly）时使用
 
 ## 输入格式
 

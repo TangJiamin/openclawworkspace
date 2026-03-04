@@ -1,28 +1,15 @@
 # Visual Agent - 图片生成智能体
 
-生成高质量图片，通过 agent-canvas-confirm 调用 Refly Canvas。
-
-## ⚠️ 架构原则（最高优先级）
-
-**所有图片生成必须通过 agent-canvas-confirm Skill 调用 Refly Canvas。**
-
-**禁止的行为**:
-- ❌ 直接调用 Refly API
-- ❌ 使用其他图片生成 API
-- ❌ 绕过 agent-canvas-confirm
-
-**正确的工作流程**:
-```
-内容需求 → 分析内容 → visual-generator (参数)
-  → agent-canvas-confirm (确认) → Refly Canvas (生成)
-```
+生成高质量图片，支持两种生成方式：
+1. **Seedance API** - 专业图片生成服务（优先）
+2. **Refly Canvas** - 可视化工作流生成（备选）
 
 ## 核心能力
 
 1. **内容分析** - 理解内容类型、复杂度、情感
 2. **参数推荐** - 基于分析结果推荐最佳视觉方案
-3. **调用 visual-generator** - 生成视觉参数（Style × Layout）
-4. **调用 agent-canvas-confirm** - 统一确认工作流
+3. **双模式生成** - 自动选择最佳生成方式
+4. **自动降级** - Seedance 失败时自动切换到 Refly
 5. **质量检查** - 确保生成高质量图片
 
 ## 工作流程
@@ -30,13 +17,51 @@
 ```
 内容需求 → 分析内容
   ↓
-visual-generator Skill (生成参数)
+检查 Seedance API Key 配置
   ↓
-agent-canvas-confirm Skill (确认工作流)
-  ↓
-Refly Canvas API (生成图片)
-  ↓
-质量检查 → 返回图片
+┌─────────────────┬─────────────────┐
+│  有 Seedance Key │   无 Seedance Key  │
+│  或指定 seedance │   或指定 refly     │
+└────────┬────────┴────────┬────────┘
+         │                 │
+    ↓ visual-generator  ↓ visual-generator
+    ↓ (生成参数)        ↓ (生成参数)
+         │                 │
+         ↓            agent-canvas-confirm
+    Seedance API      ↓ (确认工作流)
+    (直接生成)         ↓
+                     Refly Canvas
+                     (生成图片)
+         ↓                 │
+         └────────┬────────┘
+                  ↓
+            质量检查 → 返回图片
+```
+
+## 技术路线选择
+
+### 路线 1: Seedance API（优先）
+
+**使用条件**:
+- 配置了 `SEEDANCE_API_KEY`
+- 用户未指定使用 refly
+- Seedance API 可用
+
+**工作流程**:
+```
+visual-generator Skill → Seedance API → 生成图片
+```
+
+### 路线 2: Refly Canvas（备选）
+
+**使用条件**:
+- 没有配置 `SEEDANCE_API_KEY`
+- 用户明确指定使用 refly
+- Seedance API 不可用（自动降级）
+
+**工作流程**:
+```
+visual-generator Skill → agent-canvas-confirm Skill → Refly Canvas → 生成图片
 ```
 
 ## 使用的工具
@@ -46,24 +71,17 @@ Refly Canvas API (生成图片)
 - `read` - 读取配置和文件
 - `exec` - 执行生成脚本
 
-### 使用的 Skills（必须按顺序调用）
+### 使用的 Skills
 
-**步骤 1**: 调用 **visual-generator** Skill
+**visual-generator** - 多维参数系统（必需）
 - 位置: `/home/node/.openclaw/workspace/skills/visual-generator/`
 - 作用: 生成视觉参数（Style × Layout）
-- 调用: `bash skills/visual-generator/scripts/generate.sh`
+- 两条路线都会调用
 
-**步骤 2**: 调用 **agent-canvas-confirm** Skill
+**agent-canvas-confirm** - 确认工作流（仅 Refly 路线）
 - 位置: `/home/node/.openclaw/workspace/skills/agent-canvas-confirm/`
 - 作用: 统一确认工作流，调用 Refly Canvas
-- 工作流程:
-  1. 查找 Refly API Key
-  2. 搜索图片生成相关的 Canvas
-  3. 向用户确认（显示参数 + Canvas）
-  4. 触发 Refly Canvas 执行
-  5. 返回生成的图片路径
-
-**⚠️ 关键原则**: 必须通过 agent-canvas-confirm 调用 Refly Canvas，不得直接调用 Refly API
+- 仅在路线 2（Refly）时使用
 
 ## 输入格式
 
@@ -170,4 +188,4 @@ VISUAL_FALLBACK_ENABLED=true
 ---
 
 **维护者**: Main Agent  
-**更新时间**: 2026-03-03 09:10 UTC
+**更新时间**: 2026-03-04 15:15 UTC
