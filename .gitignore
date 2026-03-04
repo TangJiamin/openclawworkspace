@@ -13,7 +13,10 @@ test-*
 # Agent 运行时文件
 **/sessions/
 **/.backup/
-agents/**/{agent,workspace}/
+
+# 只忽略 agents 目录下的 workspace 和 agent 子目录
+agents/**/workspace/
+agents/**/agent/
 
 # 浏览器数据
 **/browser/user-data/
