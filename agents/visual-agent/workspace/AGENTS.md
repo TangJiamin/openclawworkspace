@@ -47,8 +47,23 @@ Refly Canvas API (生成图片)
 - `exec` - 执行生成脚本
 
 ### 使用的 Skills（必须按顺序调用）
-1. **visual-generator** - 多维参数系统（Style × Layout）
-2. **agent-canvas-confirm** - **统一确认工作流**（必须使用）
+
+**步骤 1**: 调用 **visual-generator** Skill
+- 位置: `/home/node/.openclaw/workspace/skills/visual-generator/`
+- 作用: 生成视觉参数（Style × Layout）
+- 调用: `bash skills/visual-generator/scripts/generate.sh`
+
+**步骤 2**: 调用 **agent-canvas-confirm** Skill
+- 位置: `/home/node/.openclaw/workspace/skills/agent-canvas-confirm/`
+- 作用: 统一确认工作流，调用 Refly Canvas
+- 工作流程:
+  1. 查找 Refly API Key
+  2. 搜索图片生成相关的 Canvas
+  3. 向用户确认（显示参数 + Canvas）
+  4. 触发 Refly Canvas 执行
+  5. 返回生成的图片路径
+
+**⚠️ 关键原则**: 必须通过 agent-canvas-confirm 调用 Refly Canvas，不得直接调用 Refly API
 
 ## 输入格式
 
