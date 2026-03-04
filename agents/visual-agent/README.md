@@ -1,6 +1,9 @@
 # Visual Agent - 图片生成智能体
 
-## ⭐ 核心原则\n**visual-agent 遵循 [OpenClaw 核心原则](../CORE-PRINCIPLES.md)**：\n- 第一性原理思考\n- 长期主义\n- Skill/Heartbeat 优先\n
+## ⭐ 核心原则\n**visual-agent 遵循 OpenClaw 核心原则**：
+- ⭐ 第一性原理思考（SOUL.md）
+- 🎯 长期主义（MEMORY.md）
+- 🎯 Skill/Heartbeat 优先（MEMORY.md）\n- 第一性原理思考\n- 长期主义\n- Skill/Heartbeat 优先\n
 
 生成高质量图片，支持 Seedance API 和 Refly Canvas 两种方式。
 
