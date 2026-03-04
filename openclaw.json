@@ -1,0 +1,228 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.6-3",
+    "lastTouchedAt": "2026-03-04T06:20:45.642Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-02T08:34:27.357Z",
+    "lastRunVersion": "2026.2.6-3",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "update": {
+    "checkOnStart": false
+  },
+  "browser": {
+    "executablePath": "/usr/bin/chromium",
+    "headless": true,
+    "noSandbox": true,
+    "defaultProfile": "openclaw"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "default": {
+        "baseUrl": "https://open.bigmodel.cn/api/anthropic",
+        "apiKey": "97c45b5ead4dbb33c7d3771f2018c4d7.ZfTUteXnyQ400hT6",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "glm-4.7",
+            "name": "glm-4.7",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "default/glm-4.7"
+      },
+      "imageModel": {
+        "primary": "default/glm-4.7"
+      },
+      "workspace": "/home/node/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "elevatedDefault": "full",
+      "heartbeat": {
+        "every": "12h",
+        "session": "agent:main:feishu:dm:ou_42097cc9852e3aae3de5893b96a67219",
+        "target": "feishu",
+        "to": "user:ou_42097cc9852e3aae3de5893b96a67219",
+        "accountId": "default"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "subagents": {
+          "allowAgents": [
+            "requirement-agent",
+            "research-agent",
+            "content-agent",
+            "visual-agent",
+            "video-agent",
+            "quality-agent"
+          ]
+        }
+      },
+      {
+        "id": "requirement-agent",
+        "name": "需求理解",
+        "workspace": "/home/node/.openclaw/workspace/agents/requirement-agent",
+        "agentDir": "/home/node/.openclaw/agents/requirement-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "research-agent",
+        "name": "资料收集",
+        "workspace": "/home/node/.openclaw/workspace/agents/research-agent",
+        "agentDir": "/home/node/.openclaw/agents/research-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "content-agent",
+        "name": "内容生成",
+        "workspace": "/home/node/.openclaw/workspace/agents/content-agent",
+        "agentDir": "/home/node/.openclaw/agents/content-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "visual-agent",
+        "name": "图片生成",
+        "workspace": "/home/node/.openclaw/workspace/agents/visual-agent",
+        "agentDir": "/home/node/.openclaw/agents/visual-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "video-agent",
+        "name": "视频生成",
+        "workspace": "/home/node/.openclaw/workspace/agents/video-agent",
+        "agentDir": "/home/node/.openclaw/agents/video-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "quality-agent",
+        "name": "质量审核",
+        "workspace": "/home/node/.openclaw/workspace/agents/quality-agent",
+        "agentDir": "/home/node/.openclaw/agents/quality-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      }
+    ]
+  },
+  "tools": {
+    "agentToAgent": {
+      "enabled": true
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions",
+    "tts": {
+      "edge": {
+        "voice": "zh-CN-XiaoxiaoNeural"
+      }
+    }
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true
+  },
+  "session": {
+    "dmScope": "per-channel-peer",
+    "resetTriggers": [
+      "/new",
+      "/reset"
+    ]
+  },
+  "channels": {
+    "defaults": {
+      "heartbeat": {
+        "showOk": false,
+        "showAlerts": true,
+        "useIndicator": true
+      }
+    },
+    "feishu": {
+      "enabled": true,
+      "appId": "cli_a92e467bd3f8dcc6",
+      "appSecret": "NGzOhxXnRmAlTNzIsPR1ZbljjkcueZhT",
+      "domain": "feishu",
+      "connectionMode": "websocket",
+      "sessions": {
+        "mode": "peer",
+        "defaultAgent": "main"
+      }
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "allowInsecureAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "123456"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "feishu": {
+        "enabled": true
+      }
+    },
+    "installs": {}
+  }
+}
