@@ -1,0 +1,19 @@
+{
+  "name": "每日学习与自我迭代",
+  "description": "每日总结 → 发现新能力 → 评估集成 → 避免重复",
+  "schedule": {
+    "kind": "cron",
+    "expr": "0 9 * * *",
+    "tz": "Asia/Shanghai"
+  },
+  "payload": {
+    "kind": "systemEvent",
+    "text": "执行每日学习任务：\n\nStep 1: 每日总结\n- 运行 /home/node/.openclaw/workspace/scripts/daily-summary.sh\n- 提取今日关键决策、学到的新能力、遇到的问题、改进\n- 生成明日学习方向建议\n\nStep 2: 基于总结进行学习\n- 检查现有能力（去重检查）\n- 发现新能力（OpenClaw更新、ClawHub新技能、GitHub开源项目）\n- 评估集成价值\n- 记录重要发现\n\n注意：只在有重要发现时生成报告，否则静默完成",
+    "context": "daily-learning"
+  },
+  "delivery": {
+    "mode": "announce"
+  },
+  "sessionTarget": "main",
+  "enabled": true
+}

@@ -1,0 +1,14 @@
+{
+  "capabilities": [
+    {
+      "name": "agent-reach",
+      "type": "data-source",
+      "description": "多平台数据源（YouTube、Reddit、B站、RSS、网页）",
+      "installed_at": "2026-03-04T07:49:22Z",
+      "agents": [
+        "research-agent"
+      ]
+    }
+  ],
+  "last_scan": null
+}

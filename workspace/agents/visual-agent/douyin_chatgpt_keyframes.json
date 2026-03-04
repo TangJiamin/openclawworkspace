@@ -1,0 +1,123 @@
+{
+  "task_id": "keyframes-001",
+  "generator": "visual-agent",
+  "timestamp": "2026-03-02T11:45:00Z",
+  
+  "platform": "douyin",
+  "aspect_ratio": "9:16",
+  "total_frames": 8,
+  "theme": "ChatGPT使用技巧教学",
+  
+  "visual_params": {
+    "style": "modern",
+    "layout": "flow",
+    "color_palette": {
+      "primary": "#4A90E2",
+      "secondary": "#50E3C2",
+      "accent": "#FFD700",
+      "background": "#0F172A",
+      "text": "#FFFFFF"
+    },
+    "typography": {
+      "heading_font": "bold",
+      "body_font": "medium",
+      "weight": "bold"
+    }
+  },
+  
+  "keyframes": [
+    {
+      "frame_id": "kf01",
+      "sequence": 1,
+      "duration": "3-4秒",
+      "scene": "震惊表情/钩子画面",
+      "description": "人物震惊表情特写，夸张嘴巴张大，眼睛瞪大，头顶三个大问号，配震惊音效视觉化",
+      "prompt": "夸张震惊表情人物特写，嘴巴张大成O型，眼睛瞪大，头顶三个发光大问号❓❓❓。黄色闪电背景，红色惊叹号装饰。高对比度，动态感强。抖音风格，9:16竖屏。",
+      "elements": ["question_marks", "lightning", "surprise_text"],
+      "color_tone": "yellow-red"
+    },
+    {
+      "frame_id": "kf02",
+      "sequence": 2,
+      "duration": "4-5秒",
+      "scene": "ChatGPT界面展示",
+      "description": "手机屏幕显示ChatGPT界面，输入框打字效果，AI回复出现，绿色对勾标识",
+      "prompt": "智能手机屏幕显示ChatGPT界面，深色模式。对话气泡正在输入中'...'，AI回复框显示，绿色对勾✅图标。科技蓝色光效环绕，界面清晰可见。9:16竖屏，现代化UI设计。",
+      "elements": ["phone_mockup", "chat_interface", "typing_indicator"],
+      "color_tone": "blue-green"
+    },
+    {
+      "frame_id": "kf03",
+      "sequence": 3,
+      "duration": "5-6秒",
+      "scene": "技巧1演示（角色设定）",
+      "description": "左侧提示词文字，右侧人物变身动画，从普通人变专业角色（戴眼镜、穿西装）",
+      "prompt": "左侧大字提示词'你是一位资深产品经理'，右侧普通人秒变专业人士特效：戴眼镜、穿西装、拿文件夹。金色星星✨闪光效果，红色箭头指向。对比强烈，清晰易读。9:16竖屏。",
+      "elements": ["prompt_text", "transformation_effect", "character_icon"],
+      "color_tone": "gold-red"
+    },
+    {
+      "frame_id": "kf04",
+      "sequence": 4,
+      "duration": "5-6秒",
+      "scene": "技巧2演示（结构化框架）",
+      "description": "框架流程图，从混乱文字变结构化大纲，层级清晰，带序号和箭头",
+      "prompt": "左边混乱文字堆砌⇒ 右边清晰结构化大纲。展示三级标题体系：H1、H2、H3，带序号①②③。蓝色流程箭头连接，绿色勾号标记。框架图示，逻辑清晰。9:16竖屏，教学风格。",
+      "elements": ["structure_diagram", "arrows", "numbered_list"],
+      "color_tone": "blue-green"
+    },
+    {
+      "frame_id": "kf05",
+      "sequence": 5,
+      "duration": "5-6秒",
+      "scene": "技巧3演示（Few-Shot示例）",
+      "description": "示例对比图，上2个错误示例打❌，下1个正确示例打✅，渐变背景",
+      "prompt": "Few-Shot学习示例图。上排：2个错误示例配红色❌，下排：1个正确示例配绿色✅。渐变背景从深蓝到浅蓝，黄色箭头指向正确示例。大字标注'给AI看例子'。教学清晰，9:16竖屏。",
+      "elements": ["example_boxes", "check_cross_marks", "highlight_arrow"],
+      "color_tone": "blue-yellow"
+    },
+    {
+      "frame_id": "kf06",
+      "sequence": 6,
+      "duration": "4-5秒",
+      "scene": "效果对比",
+      "description": "左边普通回复（灰色、简短），右边神级回复（彩色、详细），中间VS标志",
+      "prompt": "左右对比图。左边：普通AI回复，灰色调，简短；右边：神级回复，彩色高亮，详细专业。中间大号VS标志，金色背景。红色箭头指向右边。对比强烈，效果直观。9:16竖屏。",
+      "elements": ["comparison_split", "vs_badge", "result_boxes"],
+      "color_tone": "gray-colorful"
+    },
+    {
+      "frame_id": "kf07",
+      "sequence": 7,
+      "duration": "4-5秒",
+      "scene": "行动号召",
+      "description": "大号按钮'马上试试'，手指点击动画，绿色对勾出现，鼓励文字",
+      "prompt": "行动号召画面。大号绿色按钮'马上试试'，金色边框发光。手指点击动画，点击后出现绿色✅对勾和火花效果。背景深蓝色，文字'打开ChatGPT试试吧'。激发行动，9:16竖屏。",
+      "elements": ["cta_button", "click_animation", "success_icon"],
+      "color_tone": "green-gold"
+    },
+    {
+      "frame_id": "kf08",
+      "sequence": 8,
+      "duration": "3-4秒",
+      "scene": "结尾关注引导",
+      "description": "个人头像+大号关注按钮，红色心形❤️，配文字'关注我 学更多'",
+      "prompt": "关注引导画面。中央个人头像（科技博主风格），大号红色'关注'按钮，配心形❤️装饰。文字'关注我 学更多AI技巧'，白色大字。红色心形飘落动画，温暖友好。9:16竖屏。",
+      "elements": ["avatar_placeholder", "follow_button", "hearts"],
+      "color_tone": "red-white"
+    }
+  ],
+  
+  "quality_check": {
+    "style_consistency": 92,
+    "platform_fit": 95,
+    "flow_coherence": 90,
+    "overall_score": 92
+  },
+  
+  "technical_specs": {
+    "format": "PNG",
+    "dpi": 72,
+    "color_space": "sRGB"
+  }
+}

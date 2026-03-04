@@ -1,0 +1,69 @@
+{
+  "task_id": "cover-001",
+  "generator": "visual-agent",
+  "timestamp": "2026-03-02T11:45:00Z",
+  
+  "image_type": "cover",
+  "platform": "douyin",
+  "aspect_ratio": "9:16",
+  "dimensions": "1080×1920",
+  
+  "content": {
+    "title": "99%的人都用错了ChatGPT！",
+    "subtitle": "3个神技 让效率翻10倍",
+    "theme": "ChatGPT使用技巧"
+  },
+  
+  "visual_params": {
+    "style": "bold",
+    "layout": "dense",
+    "color_palette": {
+      "primary": "#FFD700",
+      "secondary": "#FF4444",
+      "accent": "#00FF88",
+      "background": "#1a1a2e",
+      "text": "#FFFFFF",
+      "highlight": "#FF6B35"
+    },
+    "composition": {
+      "type": "center-focused",
+      "focal_point": "upper-center",
+      "balance": "dynamic-asymmetric"
+    },
+    "typography": {
+      "heading_font": "heavy-bold",
+      "body_font": "bold",
+      "title_size": "120px",
+      "subtitle_size": "60px",
+      "weight": "extra-bold"
+    },
+    "elements": {
+      "gradient_overlay": true,
+      "glow_effects": true,
+      "tech_patterns": true,
+      "arrows": true,
+      "icons": true
+    },
+    "platform_specific": {
+      "platform": "douyin",
+      "safe_zone": "85%",
+      "thumb_area": "bottom-right"
+    }
+  },
+  
+  "generation_prompt": "抖音科技知识类封面图，9:16竖屏。大字粗体标题'99%的人都用错了ChatGPT！'，黄色高亮，红色副标题'3个神技 让效率翻10倍'。深蓝色背景(#1a1a2e)，配科技感网格线和光效。高饱和度配色：黄色#FFD700、红色#FF4444、绿色#00FF88。动态箭头指向，发光效果，强烈对比，视觉冲击力强。现代科技感，AI元素装饰。",
+  
+  "quality_check": {
+    "style_match": 95,
+    "platform_fit": 98,
+    "color_harmony": 92,
+    "overall_score": 95
+  },
+  
+  "technical_specs": {
+    "format": "PNG",
+    "dpi": 72,
+    "color_space": "sRGB",
+    "compression": "high-quality"
+  }
+}

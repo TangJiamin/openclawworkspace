@@ -1,0 +1,76 @@
+{
+  "videoGeneration": {
+    "version": "2.0",
+    "description": "视频生成双路线配置",
+
+    "defaultRoute": "refly",
+    "fallbackRoute": "seedance",
+
+    "routes": {
+      "seedance": {
+        "name": "Seedance API（直接调用）",
+        "enabled": true,
+        "priority": 2,
+
+        "api": {
+          "baseUrl": "https://api.seedance.com/v1",
+          "apiKeyEnv": "SEEDANCE_API_KEY",
+          "timeout": 120000
+        },
+
+        "features": {
+          "autoMode": true,
+          "humanIntervention": false,
+          "batchGeneration": true,
+          "visualAdjustment": false
+        },
+
+        "bestFor": [
+          "完全自动化生产",
+          "批量生成",
+          "无需人工干预"
+        ]
+      },
+
+      "refly": {
+        "name": "Refly Canvas（工作流）",
+        "enabled": true,
+        "priority": 1,
+
+        "api": {
+          "baseUrl": "https://refly.kmos.ai/api/v1",
+          "apiKeyEnv": "REFLY_API_KEY",
+          "canvasId": "c-m0pvd4un4sckc49s70udb3kl",
+          "timeout": 300000
+        },
+
+        "features": {
+          "autoMode": true,
+          "humanIntervention": true,
+          "batchGeneration": true,
+          "visualAdjustment": true,
+          "workflowVisualization": true
+        },
+
+        "bestFor": [
+          "需要人工审核",
+          "需要精细调整",
+          "质量要求高",
+          "专业人员使用"
+        ]
+      }
+    },
+
+    "principles": {
+      "mustGenerateImageFirst": true,
+      "imageToVideoWorkflow": true,
+      "parallelGenerationForbidden": true
+    },
+
+    "quality": {
+      "minScore": 85,
+      "useQualityAgent": true,
+      "autoReview": true
+    }
+  }
+}

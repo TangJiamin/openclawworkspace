@@ -1,0 +1,16 @@
+{
+  "name": "agent-matrix",
+  "version": "1.0.0-mvp",
+  "description": "OpenClaw Agent Matrix - Content Production Pipeline",
+  "main": "orchestrator.js",
+  "scripts": {
+    "start": "node orchestrator.js",
+    "test": "node orchestrator.js '生成小红书内容，介绍5个AI工具'"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

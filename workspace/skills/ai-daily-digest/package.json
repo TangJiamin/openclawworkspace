@@ -1,0 +1,19 @@
+{
+  "name": "ai-daily-digest",
+  "version": "1.0.0",
+  "description": "AI Daily Digest - OpenClaw Skill Wrapper",
+  "main": "handler.ts",
+  "scripts": {
+    "start": "node dist/handler.js",
+    "build": "tsc",
+    "test": "node handler.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
