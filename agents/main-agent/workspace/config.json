@@ -1,0 +1,33 @@
+{
+  "name": "main-agent",
+  "description": "Main Agent - 多 Agent 协调编排者",
+  "version": "1.0.0",
+  "timeout": 600,
+  "max_retries": 3,
+  "scenarios": {
+    "scene1": {
+      "name": "按需生产",
+      "description": "用户触发单个内容生产任务",
+      "entry_agent": "requirement-agent",
+      "agents": [
+        "requirement-agent",
+        "research-agent",
+        "content-agent",
+        "visual-agent",
+        "quality-agent"
+      ]
+    },
+    "scene2": {
+      "name": "定时批量生产",
+      "description": "定时触发批量内容生产任务",
+      "entry_agent": "research-agent",
+      "agents": [
+        "research-agent",
+        "content-agent",
+        "visual-agent",
+        "quality-agent"
+      ],
+      "batch_mode": true
+    }
+  }
+}

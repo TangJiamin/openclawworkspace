@@ -1,0 +1,20 @@
+{
+  "collection": {
+    "default_count": 10,
+    "max_count": 50,
+    "timeout": 120
+  },
+  "scoring": {
+    "time_weight": 0.30,
+    "hot_weight": 0.30,
+    "value_weight": 0.25,
+    "ai_weight": 0.15,
+    "threshold": 7.0
+  },
+  "quality": {
+    "min_freshness": 0.90,
+    "min_relevance": 0.95,
+    "min_score": 7.5,
+    "min_coverage": 3
+  }
+}

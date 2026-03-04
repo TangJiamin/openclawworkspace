@@ -1,0 +1,21 @@
+{
+  "generation": {
+    "default_mode": "seedance",
+    "fallback_enabled": true,
+    "seedance": {
+      "api_key_env": "SEEDANCE_API_KEY",
+      "api_url": "https://api.seedance.com/v1",
+      "priority": 1
+    },
+    "refly": {
+      "canvas_profile": "openclaw",
+      "priority": 2
+    }
+  },
+  "quality": {
+    "default_width": 1024,
+    "default_height": 1024,
+    "default_format": "png",
+    "default_quality": "high"
+  }
+}
