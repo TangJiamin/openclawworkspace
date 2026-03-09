@@ -1,10 +1,10 @@
 {
   "meta": {
     "lastTouchedVersion": "2026.2.6-3",
-    "lastTouchedAt": "2026-03-04T06:20:45.642Z"
+    "lastTouchedAt": "2026-03-06T03:30:32.956Z"
   },
   "wizard": {
-    "lastRunAt": "2026-03-02T08:34:27.357Z",
+    "lastRunAt": "2026-03-06T03:30:32.953Z",
     "lastRunVersion": "2026.2.6-3",
     "lastRunCommand": "doctor",
     "lastRunMode": "local"
@@ -23,7 +23,7 @@
     "providers": {
       "default": {
         "baseUrl": "https://open.bigmodel.cn/api/anthropic",
-        "apiKey": "97c45b5ead4dbb33c7d3771f2018c4d7.ZfTUteXnyQ400hT6",
+        "apiKey": "${ZHIPU_API_KEY}",
         "api": "anthropic-messages",
         "models": [
           {
@@ -157,6 +157,18 @@
             "main"
           ]
         }
+      },
+      {
+        "id": "smart-cleaner-agent",
+        "name": "智能清理",
+        "workspace": "/home/node/.openclaw/workspace/agents/smart-cleaner-agent",
+        "agentDir": "/home/node/.openclaw/agents/smart-cleaner-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
       }
     ]
   },
@@ -195,14 +207,14 @@
     },
     "feishu": {
       "enabled": true,
-      "appId": "cli_a92e467bd3f8dcc6",
-      "appSecret": "NGzOhxXnRmAlTNzIsPR1ZbljjkcueZhT",
       "domain": "feishu",
       "connectionMode": "websocket",
       "sessions": {
         "mode": "peer",
         "defaultAgent": "main"
-      }
+      },
+      "appId": "${FEISHU_APP_ID}",
+      "appSecret": "${FEISHU_APP_SECRET}"
     }
   },
   "gateway": {
@@ -213,8 +225,7 @@
       "allowInsecureAuth": true
     },
     "auth": {
-      "mode": "token",
-      "token": "123456"
+      "mode": "token"
     }
   },
   "plugins": {

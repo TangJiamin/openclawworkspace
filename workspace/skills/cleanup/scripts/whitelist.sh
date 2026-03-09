@@ -42,5 +42,16 @@ is_whitelisted() {
         return 0  # main agent 的所有文件
     fi
 
+    # 只保护长期保留的归档目录
+    if [[ "$file" == *"/workspace/archive/agents-history/"* ]]; then
+        return 0  # Agent 矩阵设计历史（长期保留）
+    fi
+
+    if [[ "$file" == *"/workspace/archive/architecture-history/"* ]]; then
+        return 0  # 架构调整历史（长期保留）
+    fi
+
+    # 注意: archive/temp/ 不在白名单中，可被清理
+
     return 1  # 不在白名单中
 }

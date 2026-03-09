@@ -20,14 +20,67 @@
 - **位置**: `/home/node/.openclaw/workspace/skills/metaso-search/`
 - **调用方式**: `bash skills/metaso-search/scripts/search.sh "$QUERY"`
 
+## 生成脚本
+
+### generate-v2.sh（基础版本）
+- **功能**: 基于模板生成文案
+- **优点**: 快速、稳定、无需API
+- **缺点**: 内容质量有限，需要手动填充
+- **调用方式**: `bash scripts/generate-v2.sh "平台" "主题" "风格"`
+
+### generate-v3.sh（智能版本）
+- **功能**: 集成 GLM-4-Plus 智能生成
+- **优点**: 高质量、自适应、完整内容
+- **缺点**: 需要配置 API，响应时间较长
+- **调用方式**: `bash scripts/generate-v3.sh "平台" "主题" "风格" "背景信息"`
+- **状态**: ⚠️ 需要配置 GLM-4-Plus API
+
 ## 外部服务
 
 ### GLM-4-Plus
 - **类型**: LLM 模型
-- **用途**: 文案生成
-- **调用方式**: 通过 OpenClaw 内置功能
+- **用途**: 智能文案生成（v3.0）
+- **调用方式**: 通过 OpenClaw 内置功能或 API
+- **状态**: ✅ 已集成（需要配置）
 
 ---
 
-**维护者**: Main Agent  
-**更新时间**: 2026-03-03 09:20 UTC
+## 使用示例
+
+### 基础生成（v2.0）
+```bash
+# 小红书文案
+bash scripts/generate-v2.sh "小红书" "AI工具推荐" "轻松"
+
+# 抖音文案
+bash scripts/generate-v2.sh "抖音" "ChatGPT技巧" "快节奏"
+
+# 微信文案
+bash scripts/generate-v2.sh "微信" "AI行业趋势" "专业"
+```
+
+### 智能生成（v3.0）
+```bash
+# 小红书文案（智能）
+bash scripts/generate-v3.sh "小红书" "AI工具推荐" "轻松"
+
+# 抖音文案（智能+背景）
+bash scripts/generate-v3.sh "抖音" "ChatGPT技巧" "快节奏" "针对新手用户"
+
+# 微信文案（智能+背景）
+bash scripts/generate-v3.sh "微信" "AI行业趋势" "专业" "2024年最新趋势"
+```
+
+---
+
+## 输出位置
+
+所有生成的文案保存在：
+```
+/home/node/.openclaw/workspace/agents/content-agent/output/content_YYYYMMDD_HHMMSS.md
+```
+
+---
+
+**维护者**: Main Agent
+**更新时间**: 2026-03-05 13:45 UTC（优化为实际可用的内容生成）

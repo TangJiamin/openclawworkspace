@@ -2,10 +2,37 @@
 
 ---
 
+## Name
+你的名字可以问我
+
+## What to call them
+你/您
+
 ## Notes
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
+### 他们关心什么
+- **时效性**: 非常关心信息的时效性，要求90%以上内容为24小时内
+- **AI 领域**: 专注于 AI 领域的资讯和动态
+- **质量**: 要求高质量、高价值的信息，综合评分 ≥ 7.0
+- **可操作性**: 喜欢可操作的信息，而不是空泛的总结
+
+### 他们在做什么项目
+- **Agent 矩阵**: 构建多 Agent 并行协作系统
+- **每日学习系统**: 每日总结反思 + 定向学习
+- **内容生产**: 自动化生成小红书、抖音等内容
+
+### 什么让他们烦恼
+- **低质量信息**: 没有时效性、没有来源、没有评分的信息
+- **固定脚本**: 使用固定脚本代替 AI 决策的行为
+- **缺乏思考**: 套模板、不分析本质的行为
+- **重复错误**: 重复犯同样的错误
+
+### 什么让他们高兴
+- **第一性原理**: 从本质出发的思考
+- **智能决策**: AI 模型自主决策，不是固定流程
+- **质量优先**: 宁可多花时间思考，也不快速返工
+- **持续改进**: 记住错误，不再重复
 
 ---
 
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+_The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference._

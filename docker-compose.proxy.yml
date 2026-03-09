@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  openclaw:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+
+    image: openclaw-with-proxy:latest
+    container_name: openclaw
+
+    restart: unless-stopped
+
+    # 环境变量（可选，镜像中已设置）
+    environment:
+      - http_proxy=http://host.docker.internal:7897
+      - https_proxy=http://host.docker.internal:7897
+      - HTTP_PROXY=http://host.docker.internal:7897
+      - HTTPS_PROXY=http://host.docker.internal:7897
+      - ALL_PROXY=http://host.docker.internal:7897
+      - no_proxy=localhost,127.0.0.1,172.19.0.1
+
+      # OpenClaw 配置
+      - ZHIPU_API_KEY=${ZHIPU_API_KEY}
+
+    # 挂载目录
+    volumes:
+      # Workspace 目录
+      - ./workspace:/home/node/.openclaw/workspace
+      # 配置目录
+      - ./config:/home/node/.openclaw/config
+      # 数据目录
+      - ./data:/home/node/.openclaw/data
+      # Agents 目录
+      - ./agents:/home/node/.openclaw/agents
+
+    # 端口映射
+    ports:
+      - "18789:18789"
+
+    # 网络模式
+    # network_mode: "bridge"  # 默认
+
+    # 额外主机（Linux 需要）
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # 资源限制（可选）
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 2G
+    #     reservations:
+    #       cpus: '0.5'
+    #       memory: 512M
+
+# 网络配置
+# networks:
+#   default:
+#     name: openclaw-network

@@ -1,234 +1,234 @@
 ---
 name: visual-generator
-description: 基于多维参数系统的智能视觉内容生成器（v2.0 增强版）。当用户需要生成图片、信息图、封面时，自动分析内容并推荐最佳视觉风格和布局。
-tags: [visual, image, generation, xhs, infographic]
+description: 智能视觉内容生成器（v3.1 增强版）。自动分析内容、智能选择模型、生成高质量图片。支持小红书、抖音、微信等平台。
+tags: [visual, image, generation, xhs, infographic, ai]
 category: content-production
-version: 2.0
+version: 3.1
 ---
 
-# 🎨 Visual Generator v2.0
+# 🎨 Visual Generator v3.1 - 智能视觉生成器
 
-基于内容分析自动推荐视觉风格和布局的智能生成工具（v2.0 增强版）。
+基于内容分析自动推荐视觉风格、智能选择模型、生成高质量图片的智能生成工具（v3.1 增强版）。
 
-## 🎯 v2.0 核心改进
+## 🎯 v3.1 核心升级
 
-### 1. 智能内容分析
+### 1. 详细的决策标准（NEW ⭐）
 
-**v1.0**: 基础功能，手动指定参数
+**学习自 article-illustrator**
 
-**v2.0**: 深度内容分析
-- ✅ 自动识别内容类型（列表/教程/对比/教程/通用）
-- ✅ 自动识别情感基调（轻松/专业/幽默/权威）
-- ✅ 自动识别复杂度（低/中/高）
-- ✅ 自动识别目标平台（小红书/抖音/微信/通用）
+- ✅ 场景判断标准（关键词识别）
+- ✅ 风格选择决策树
+- ✅ 模型选择决策逻辑
 
-### 2. 智能参数推荐
+### 2. 参考文档系统（NEW ⭐）
 
-**v1.0**: 简单规则匹配
+**学习自 article-illustrator**
 
-**v2.0**: 多维度推荐算法
-- 内容类型匹配度 (30%)
-- 情感基调匹配度 (30%)
-- 平台适配度 (20%)
-- 用户画像匹配度 (20%)
-- **推荐置信度**: 85%+
+- ✅ `style-guide.md` - 视觉风格指南
+- ✅ `model-guide.md` - 模型选择指南
+- ✅ 避免在 SKILL.md 中重复细节
 
-### 3. 交互式生成
+### 3. 保留 v3.0 能力
 
-**v1.0**: 直接生成
-
-**v2.0**: 交互确认
-- ✅ 分析内容
-- ✅ 推荐参数
-- ✅ 询问用户确认
-- ✅ 支持自定义参数
-
-### 4. 学习 baoyu-skills
-
-**学习重点**:
-- baoyu-xhs-images 的规则系统
-- 参数推荐的逻辑
-- 小红书平台的优化经验
+- ✅ 智能模型选择
+- ✅ 多层备用方案
+- ✅ 统一 API 接口
 
 ---
 
-## 使用方法
+## 🚀 快速开始
 
-### 自动模式（推荐，v2.0 新增）
-
-```
-生成小红书信息图，内容是"5个提高效率的AI工具"
-```
-
-系统会：
-1. 📊 分析内容（列表型工具推荐）
-2. 🎯 推荐参数（style=fresh, layout=list）
-3. 💡 置信度：92%
-4. ❓ 询问是否接受推荐
-
-### 指定参数（v1.0 保留）
-
-```
-生成信息图，风格用 technical，布局用 pyramid
-```
-
-### 使用预设
-
-```
-生成小红书教程风格的图片
-```
-
----
-
-## 参数系统
-
-### 风格 (Style)
-
-- `cute` - 可爱（柔和色彩、卡通元素）
-- `fresh` - 清新（自然、明亮）
-- `warm` - 温暖（柔和、亲和）
-- `bold` - 大胆（高对比、强烈）
-- `minimal` - 极简（干净、简洁）
-- `technical` - 技术（蓝图、工程）
-- `corporate` - 商务（专业、正式）
-- `elegant` - 优雅（高级、质感）
-- `dark` - 暗色（科技、神秘）
-
-### 布局 (Layout)
-
-- `sparse` - 稀疏（1-2 点，适合封面）
-- `balanced` - 平衡（3-4 点，标准内容）
-- `dense` - 密集（5-8 点，知识卡片）
-- `list` - 列表（4-7 项，排名、清单）
-- `comparison` - 对比（2 面，优缺点）
-- `flow` - 流程（3-6 步，教程、过程）
-- `pyramid` - 金字塔（层级结构）
-- `mind-map` - 思维导图（头脑风暴）
-
----
-
-## 工作流程
-
-### v2.0 工作流
-
-```
-用户输入
-  ↓
-📊 内容分析
-  ├─ 类型识别（列表/教程/对比/通用）
-  ├─ 基调识别（轻松/专业/幽默/权威）
-  ├─ 复杂度识别（低/中/高）
-  └─ 平台识别（小红书/抖音/微信）
-  ↓
-🎯 智能推荐
-  ├─ Style × Layout 推荐
-  ├─ 置信度评分
-  └─ 推荐依据
-  ↓
-❓ 用户确认
-  ├─ y → 使用推荐参数
-  ├─ n → 输入自定义参数
-  └─ r → 重新推荐
-  ↓
-🎨 生成图片
-  ↓
-✅ 完成
-```
-
----
-
-## 平台预设
-
-### 小红书 (xhs)
-
-```
-教程类: style=fresh, layout=flow
-知识类: style=notion, layout=dense
-对比类: style=bold, layout=comparison
-```
-
-### 微信 (wechat)
-
-```
-封面: style=minimal, type=conceptual
-信息图: style=corporate, layout=pyramid
-```
-
-### 抖音 (douyin)
-
-```
-封面: style=bold, palette=vivid
-```
-
----
-
-## 📊 评分系统
-
-### 内容类型评分规则
-
-| 类型 | 特点 | 推荐风格 | 推荐布局 |
-|------|------|---------|---------|
-| 列表 | 4-7 项 | fresh | list |
-| 教程 | 步骤流程 | fresh/minimal | flow |
-| 对比 | 2 面对比 | bold | comparison |
-| 教程型 | 长篇教程 | minimal | flow |
-
-### 情感基调评分规则
-
-| 基调 | 特点 | 推荐风格 |
-|------|------|---------|
-| 轻松 | 友好、亲切 | fresh |
-| 专业 | 严谨、深度 | minimal/corporate |
-| 幽默 | 有趣、搞笑 | cute/warm |
-| 权威 | 专家、深度 | bold/elegant |
-
----
-
-## 🔧 技术实现
-
-### 内容分析算法
+### 基础使用
 
 ```bash
-analyze_content() {
-  # 提取关键词
-  # 识别内容类型
-  # 识别情感基调
-  # 识别复杂度
-  # 识别目标平台
-}
+# 自动模式（推荐）
+bash /home/node/.openclaw/workspace/skills/visual-generator/scripts/generate.sh \
+  "5个提高效率的AI工具"
+
+# 系统会自动：
+# 1. 分析内容类型
+# 2. 推荐风格和参数
+# 3. 选择最优模型
+# 4. 生成图片
 ```
 
-### 参数推荐算法
+---
+
+## 🎓 决策标准
+
+### 场景识别标准
+
+**判断流程**：
+
+1. **扫描关键词**
+   - 商业广告 → flux-realism
+   - 人物肖像 → flux-realism
+   - 小红书 → jimeng-5.0
+   - 抖音 → jimeng-5.0
+   - 其他 → jimeng-5.0
+
+2. **分析内容类型**
+   - 教程/指南 → fresh
+   - 新闻/资讯 → bold
+   - 情感/故事 → warm
+   - 技术/文档 → technical
+
+3. **评估质量要求**
+   - 商业级 → flux-realism
+   - 日常级 → jimeng-5.0
+   - 测试级 → flux/schnell
+
+### 风格选择决策
+
+```markdown
+| 内容类型 | 情感基调 | 推荐风格 |
+|---------|---------|---------|
+| 教程/指南 | 轻松 | fresh |
+| 新闻/资讯 | 震撼 | bold |
+| 情感/故事 | 宁静 | warm |
+| 技术/文档 | 专业 | technical |
+| 商务/广告 | 高级 | elegant |
+```
+
+### 模型选择决策
+
+```markdown
+## 决策树
+
+用户请求生成图片
+    ↓
+是否需要照片级写实？
+    ↓ 是
+├─ 商业广告 → flux-realism
+├─ 人物肖像 → flux-realism
+└─ 产品渲染 → flux-realism
+    ↓ 否
+├─ 小红书封面 → jimeng-5.0
+├─ 抖音封面 → jimeng-5.0
+└─ 微信配图 → jimeng-5.0
+```
+
+---
+
+## 📖 参考文档
+
+详细的指南请参考：
+
+- **视觉风格指南**: `references/style-guide.md`
+  - 风格分类（fresh, bold, minimal, warm, technical, elegant）
+  - 平台风格（小红书、抖音、微信）
+  - 配色方案
+  - 构图原则
+
+- **模型选择指南**: `references/model-guide.md`
+  - 模型对比（jimeng-5.0, flux-realism, flux/schnell）
+  - 场景匹配（商业项目、小红书、抖音、肖像）
+  - 决策树
+  - 成本对比
+
+---
+
+## 🔄 工作流程
+
+```
+用户输入内容
+    ↓
+步骤一：内容分析
+    ├─ 识别内容类型
+    ├─ 识别情感基调
+    └─ 识别目标平台
+    ↓
+步骤二：风格推荐
+    ├─ 匹配风格（fresh/bold/warm/etc）
+    ├─ 匹配布局（sparse/balanced/dense/list）
+    └─ 匹配色彩（vivid/pastel/monochrome）
+    ↓
+步骤三：模型选择
+    ├─ 判断场景
+    ├─ 评估质量要求
+    └─ 选择最优模型
+    ↓
+步骤四：生成提示词
+    ├─ 风格 → 描述
+    ├─ 布局 → 描述
+    └─ 色彩 → 描述
+    ↓
+步骤五：调用 API
+    ├─ 主模型（jimeng-5.0/flux-realism）
+    ├─ 备用模型（失败时）
+    └─ 返回图片 URL
+```
+
+---
+
+## 💡 使用示例
+
+### 示例1：小红书封面
 
 ```bash
-recommend_params() {
-  # 基于内容类型、基调、复杂度
-  # 匹配最佳 Style × Layout 组合
-  # 计算推荐置信度
-}
+# 输入
+generate "小红书封面，推荐5个AI写作工具"
+
+# 自动处理
+# 1. 识别：小红书 + 教程类
+# 2. 推荐：style=fresh, layout=list, palette=vivid
+# 3. 选择：jimeng-5.0
+# 4. 生成提示词
+# 5. 调用 API
+
+# 输出
+✅ 图片生成成功
+🔗 图片URL: https://...
+📊 模型: jimeng-5.0
+💰 消耗积分: 2
+```
+
+### 示例2：商业广告
+
+```bash
+# 输入
+generate "商业产品广告，luxury perfume bottle" --model "flux-realism"
+
+# 自动处理
+# 1. 识别：商业 + 产品
+# 2. 推荐：professional, studio lighting
+# 3. 选择：flux-realism（用户指定）
+# 4. 生成提示词
+# 5. 调用 API
+
+# 输出
+✅ 图片生成成功
+🔗 图片URL: https://...
+📊 模型: flux-realism
+💰 消耗积分: X
 ```
 
 ---
 
-## ✅ v2.0 优势
+## ⚠️ 注意事项
 
-1. ✅ **更智能** - 自动分析内容
-2. ✅ **更准确** - 学习 baoyu-skills 的规则
-3. ✅ **更友好** - 交互式确认
-4. ✅ **更灵活** - 保留手动指定选项
-5. ✅ **更专业** - 置信度评分
+### API Key
+
+- ✅ 自动从环境变量 `XSKILL_API_KEY` 读取
+- ⚠️ 位置：`/home/node/.openclaw/.env`
+
+### 多层备用方案
+
+1. **jimeng-5.0**（优先）
+2. **flux-realism**（备用）
+3. **本地生成**（最后）
+
+### 消耗积分
+
+| 模型 | 积分/次 |
+|------|---------|
+| jimeng-5.0 | 2 |
+| flux-realism | 待测试 |
 
 ---
 
-## 📚 参考来源
-
-- baoyu-skills 的 baoyu-xhs-images
-- baoyu-skills 的实现方式
-- Claude Code Plugin 最佳实践
-
----
-
-**版本**: 2.0（增强版）
-**维护者**: Main Agent  
-**更新时间**: 2026-03-03 10:20 UTC
-**学习来源**: baoyu-skills
+**版本**: 3.1（增强版）
+**维护者**: Main Agent
+**更新时间**: 2026-03-06
+**新增功能**: 详细的决策标准、参考文档系统
+**学习来源**: article-illustrator（决策逻辑 + 参考文档）

@@ -9,22 +9,52 @@
 ### 执行工具
 - `exec` - 执行生成脚本
 
-### Agent 通信
-- `sessions_spawn` - 调用 visual-agent 生成图片（必需）
+## 生成脚本（v3.1 - 用户意图判断版）
+
+### generate.sh
+- **功能**: 两阶段视频生成（规划 + 生产）
+- **阶段1**: 分镜规划（seedance-storyboard Skill）
+- **阶段2**: 实际生产（基于用户意图）
+- **关键**: 必须先有图片（优先 visual-agent）
+
+### 工作流程
+
+```
+用户输入（平台、主题、图片路径、背景、是否可视化）
+    ↓
+检查图片是否存在
+    ↓
+阶段1: 分镜规划
+    seedance-storyboard Skill → 生成分镜脚本
+    （镜头、时长、节奏）
+    ↓
+阶段2: 实际生产
+    判断逻辑：
+    ├─ 没有 Seedance API
+    │  └─ 使用 Refly Canvas
+    ├─ 有 Seedance API + 用户希望可视化
+    │  └─ 使用 Refly Canvas
+    ├─ 有 Seedance API + 用户不希望可视化
+    │  └─ 使用 Seedance API
+    └─ 都没有
+       └─ 仅返回分镜脚本
+```
 
 ## 使用的 Skills
 
-### seedance-storyboard
-- **类型**: 分镜生成工具
-- **用途**: 调用 Seedance API 生成视频分镜和视频
+### seedance-storyboard（阶段1 - 分镜规划）
+- **类型**: 分镜规划工具
+- **用途**: 对话引导分镜生成
 - **位置**: `/home/node/.openclaw/workspace/skills/seedance-storyboard/`
-- **调用方式**: `bash scripts/seedance-storyboard.sh "$IMAGE_PATH" "$CONTENT"`
+- **调用时机**: 阶段1，每次都会调用
+- **必需**: ✅ 必需
 
-### agent-canvas-confirm
-- **类型**: 确认工作流工具
-- **用途**: 调用 Refly Canvas 生成视频
+### agent-canvas-confirm（阶段2 - 可选生产工具）
+- **类型**: 可视化工作流工具
+- **用途**: Refly Canvas 可视化工作流
 - **位置**: `/home/node/.openclaw/workspace/skills/agent-canvas-confirm/`
-- **调用方式**: `bash scripts/canvas.sh "generate-video" "$IMAGE_PATH" "$CONTENT"`
+- **调用时机**: 阶段2，如果用户希望可视化
+- **必需**: ⚠️ 可选
 
 ## 依赖的 Agents
 
@@ -35,19 +65,73 @@
 
 ## 外部 API
 
-### Seedance API
+### Seedance API（阶段2 - 可选生产工具）
 - **类型**: 视频生成 API
 - **用途**: 专业视频生成服务
-- **认证**: API Key（从 .env 或环境变量读取）
-- **优先级**: 1（优先使用）
-
-### Refly Canvas
-- **类型**: 可视化工作流
-- **用途**: 备用视频生成方案
-- **认证**: 无需 API Key
-- **优先级**: 2（降级使用）
+- **认证**: API Key（从环境变量读取）
+- **调用时机**: 阶段2，如果用户不希望可视化
+- **必需**: ⚠️ 可选
 
 ---
 
-**维护者**: Main Agent  
-**更新时间**: 2026-03-03 09:12 UTC
+## 判断逻辑（用户修正版）
+
+### 阶段1（必需）
+1. ✅ **seedance-storyboard Skill** - 分镜规划（必需）
+
+### 阶段2（基于用户意图）
+
+**判断条件**:
+1. **没有 Seedance API** → 使用 Refly Canvas
+2. **有 Seedance API + 用户希望可视化** → 使用 Refly Canvas
+3. **有 Seedance API + 用户不希望可视化** → 使用 Seedance API
+4. **都没有** → 仅返回分镜脚本
+
+**参数说明**:
+- 第5个参数: `USER_WANTS_VISUAL`（true/false）
+- 默认值: `false`（直接使用 Seedance API）
+
+---
+
+## 关键原则
+
+### 第一性原理
+1. **先规划，后执行** - 先生成分镜，再实际生产
+2. **分镜可复用** - 规划的分镜可以用于多个生产工具
+3. **基于用户意图** - 根据用户需求智能选择
+
+### 技术优势
+1. ✅ **两阶段分离** - 规划和生产独立
+2. ✅ **分镜可调整** - 用户可以在可视化工作流中调整分镜
+3. ✅ **用户意图优先** - 基于用户需求智能选择
+4. ✅ **完全自动化** - 无需人工选择，自动判断最佳方案
+
+---
+
+## 工作流程
+
+### 生成视频的正确流程
+
+1. **先调用 visual-agent** → 生成图片（两阶段：规划 + 生产）
+2. **获取图片路径** → 保存图片
+3. **再调用 video-agent** → 根据图片生成视频（两阶段：规划 + 生产）
+
+### 两阶段生成机制
+
+#### visual-agent（图片生成）
+```
+阶段1: visual-generator Skill → 参数规划
+阶段2: Refly Canvas / Seedance API → 实际生产（基于用户意图）
+```
+
+#### video-agent（视频生成）
+```
+阶段1: seedance-storyboard Skill → 分镜规划
+阶段2: Refly Canvas / Seedance API → 实际生产（基于用户意图）
+```
+
+---
+
+**维护者**: Main Agent
+**更新时间**: 2026-03-05 16:03 UTC（新增用户意图判断）
+**版本**: v3.1

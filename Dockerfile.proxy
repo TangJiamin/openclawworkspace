@@ -1,0 +1,47 @@
+# OpenClaw 代理增强版 Dockerfile
+# 基于原镜像添加代理配置
+
+FROM ghcr.io/openclaw/openclaw:latest
+
+LABEL maintainer="your-email@example.com"
+LABEL description="OpenClaw with proxy configuration"
+
+# ===== 设置代理环境变量 =====
+ENV http_proxy=http://host.docker.internal:7897 \
+    https_proxy=http://host.docker.internal:7897 \
+    HTTP_PROXY=http://host.docker.internal:7897 \
+    HTTPS_PROXY=http://host.docker.internal:7897 \
+    ALL_PROXY=http://host.docker.internal:7897 \
+    no_proxy=localhost,127.0.0.1,172.19.0.1
+
+# ===== 复制配置文件 =====
+# 创建配置目录
+RUN mkdir -p /home/node/.openclaw/profile.d
+
+# 复制启动脚本
+COPY startup.sh /home/node/.openclaw/startup.sh
+RUN chmod +x /home/node/.openclaw/startup.sh
+
+# 复制代理配置脚本
+COPY profile.d/proxy.sh /home/node/.openclaw/profile.d/proxy.sh
+RUN chmod +x /home/node/.openclaw/profile.d/proxy.sh
+
+# ===== 配置 Git =====
+RUN git config --global http.proxy http://host.docker.internal:7897 && \
+    git config --global https.proxy http://host.docker.internal:7897
+
+# ===== 添加到 bashrc =====
+RUN echo 'source /home/node/.openclaw/profile.d/proxy.sh' >> /home/node/.bashrc
+
+# ===== 设置工作目录 =====
+WORKDIR /home/node/.openclaw
+
+# ===== 暴露端口 =====
+EXPOSE 18789
+
+# ===== 健康检查 =====
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:18789/health || exit 1
+
+# ===== 默认命令 =====
+CMD ["/home/node/.openclaw/startup.sh"]
