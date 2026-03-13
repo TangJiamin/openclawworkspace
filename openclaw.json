@@ -1,11 +1,11 @@
 {
   "meta": {
-    "lastTouchedVersion": "2026.3.1",
-    "lastTouchedAt": "2026-03-11T09:08:32.974Z"
+    "lastTouchedVersion": "2026.3.8",
+    "lastTouchedAt": "2026-03-13T02:50:16.565Z"
   },
   "wizard": {
-    "lastRunAt": "2026-03-06T03:30:32.953Z",
-    "lastRunVersion": "2026.2.6-3",
+    "lastRunAt": "2026-03-13T01:38:43.653Z",
+    "lastRunVersion": "2026.3.8",
     "lastRunCommand": "doctor",
     "lastRunMode": "local"
   },
@@ -142,8 +142,7 @@
       },
       "sandbox": {
         "mode": "off"
-      },
-      "runTimeoutSeconds": 300
+      }
     },
     "list": [
       {
@@ -169,8 +168,7 @@
           "allowAgents": [
             "main"
           ]
-        },
-        "timeout": 240
+        }
       },
       {
         "id": "research-agent",
@@ -182,8 +180,7 @@
           "allowAgents": [
             "main"
           ]
-        },
-        "timeout": 180
+        }
       },
       {
         "id": "content-agent",
@@ -195,8 +192,7 @@
           "allowAgents": [
             "main"
           ]
-        },
-        "timeout": 120
+        }
       },
       {
         "id": "visual-agent",
@@ -208,8 +204,7 @@
           "allowAgents": [
             "main"
           ]
-        },
-        "timeout": 300
+        }
       },
       {
         "id": "video-agent",
@@ -221,8 +216,7 @@
           "allowAgents": [
             "main"
           ]
-        },
-        "timeout": 300
+        }
       },
       {
         "id": "quality-agent",
@@ -234,8 +228,7 @@
           "allowAgents": [
             "main"
           ]
-        },
-        "timeout": 60
+        }
       },
       {
         "id": "smart-cleaner-agent",
@@ -252,12 +245,12 @@
     ]
   },
   "tools": {
-    "agentToAgent": {
-      "enabled": true
-    },
     "profile": "full",
     "sessions": {
       "visibility": "all"
+    },
+    "agentToAgent": {
+      "enabled": true
     },
     "fs": {
       "workspaceOnly": true
@@ -266,12 +259,7 @@
       "tools": {
         "allow": [
           "*"
-        ],
-        "exec": {
-          "host": "gateway",
-          "security": "full",
-          "ask": "off"
-        }
+        ]
       }
     }
   },
@@ -349,6 +337,7 @@
     }
   },
   "plugins": {
+    "enabled": true,
     "allow": [
       "feishu"
     ],
@@ -374,7 +363,6 @@
         "resolvedAt": "2026-03-11T03:32:43.155Z",
         "installedAt": "2026-03-11T03:32:53.109Z"
       }
-    },
-    "enabled": true
+    }
   }
 }

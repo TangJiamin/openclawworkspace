@@ -113,7 +113,7 @@
       "createdAtMs": 1772681000000,
       "schedule": {
         "kind": "cron",
-        "expr": "0 1 * * *",
+        "expr": "0 7 * * *",
         "tz": "Asia/Shanghai"
       },
       "sessionTarget": "isolated",
@@ -171,7 +171,7 @@
       "createdAtMs": 1773096000000,
       "schedule": {
         "kind": "cron",
-        "expr": "0 2 * * *",
+        "expr": "30 0 * * *",
         "tz": "Asia/Shanghai"
       },
       "sessionTarget": "main",
@@ -187,15 +187,15 @@
         "to": "ou_42097cc9852e3aae3de5893b96a67219"
       },
       "state": {
-        "nextRunAtMs": 1773424800000,
-        "lastRunAtMs": 1773370224555,
+        "nextRunAtMs": 1773419400000,
+        "lastRunAtMs": 1773333000028,
         "lastStatus": "ok",
-        "lastDurationMs": 11382,
+        "lastDurationMs": 25462,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "unknown",
         "consecutiveErrors": 0
       },
-      "updatedAtMs": 1773370235937
+      "updatedAtMs": 1773333025490
     },
     {
       "id": "ee6ace80-32c5-4721-afbb-b34c0d9dcf80",
