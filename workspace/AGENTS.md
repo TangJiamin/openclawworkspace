@@ -1,7 +1,57 @@
 # AGENTS.md - Main Agent 操作指南
 
-**更新时间**: 2026-03-05 17:20 UTC
-**版本**: 3.0 (智能协同版本)
+**更新时间**: 2026-03-11 09:35 UTC
+**版本**: 3.2 (智能协同 + 翻译能力)
+
+---
+
+## 📈 2026 年 AI Agent 趋势（重要）
+
+### 核心转变：从 Copilot 到 Agent
+
+**Copilot（副驾驶）**:
+- ❌ 需要人类指令
+- ❌ 只能提供建议
+- ❌ 无法独立完成任务
+
+**Agent（智能体）**:
+- ✅ 自主拆解任务
+- ✅ 独立执行决策
+- ✅ 交付完整结果
+
+**评价标准**: "能自己干多少"（而不是"需要多少指令"）
+
+### 五大趋势
+
+1. **多 Agent 协作** - AutoGen、CrewAI、LangGraph
+2. **本地执行** - Open Interpreter、数据安全
+3. **协议标准化** - MCP（工具调用）、A2A（Agent协作）
+4. **垂直领域 Agent** - Shannon、UI-TARS、专业场景
+5. **Canvas 渲染** - 视觉交互界面、4K生成
+
+### 技术演进路线
+
+- **2023年**: 单 Agent 探索（AutoGPT、BabyAGI）
+- **2024年**: 多 Agent 协作（AutoGen、CrewAI）
+- **2025年**: 企业级应用（Semantic Kernel、Dify）
+- **2026年**: 本地化 + 可视化（Open Interpreter、Canvas）
+
+### 开源项目 TOP 15
+
+| 排名 | 项目 | 核心特性 |
+|-----|------|---------|
+| 1 | LangChain | 多模型支持、模块化 |
+| 2 | AutoGen | 多 Agent 协作 |
+| 3 | CrewAI | 角色扮演、声明式编排 |
+| 4 | LlamaIndex | RAG 框架 |
+| 5 | Haystack | 端到端 NLP |
+| 6 | Semantic Kernel | 企业级应用 |
+| 7 | Open Interpreter | 本地执行 |
+| 8 | Transformers Agents | HuggingFace 生态 |
+| 9 | BabyAGI | 任务自动化 |
+| 10 | MetaGPT | 软件开发 |
+
+**详细排名**: 参见学习报告 `.learnings/directed-learning-2026-03-10.md`
 
 ---
 
@@ -45,6 +95,63 @@ bash /home/node/.openclaw/workspace/skills/metaso-search/scripts/metaso_search.s
 
 **详细指南**: `docs/URL-ACCESS-GUIDE.md`
 
+---
+
+## 🌍 新增能力（2026-03-11）
+
+### 搜索增强 ⭐
+
+**搜索优先级**:
+1. **Brave Search** - 优先使用（OpenClaw 内置 web_search tool）
+2. **Tavily Search** - 备用方案（AI 优化搜索，需要 TAVILY_API_KEY）
+3. **Metaso 搜索** - 降级方案（AI 搜索增强）
+
+**使用决策**:
+- 需要快速搜索 → Brave Search
+- 需要 AI 答案 → Tavily Search
+- 其他搜索失败 → Metaso 搜索
+
+**统一接口**:
+```bash
+# 使用统一搜索脚本
+bash /home/node/.openclaw/workspace/scripts/search.sh "<query>" [max_results]
+```
+
+**相关 Agents**: research-agent, content-agent
+
+**详细说明**: 详见 TOOLS.md
+
+### 翻译能力
+
+**相关 Agents**: research-agent, content-agent
+
+**核心特性**:
+- 三模式翻译（quick/normal/refined）
+- 术语管理（全局+项目+自动提取）
+- 智能分块（长文档自动分块）
+
+**使用决策**:
+- 遇到外文资料时自动翻译
+- 根据内容长度选择模式
+- 确保术语一致性
+
+**详细说明**: 详见 TOOLS.md
+
+### 小红书系列生成能力
+
+**相关 Agents**: visual-agent
+
+**核心特性**:
+- Style × Layout 二维系统（11×8=88种组合）
+- 1-10 张系列生成，自动拆分
+- 20+ 快速预设
+
+**使用决策**:
+- 需要小红书图文系列 → 使用 xhs-series
+- 根据内容类型选择预设
+
+**详细说明**: 详见 TOOLS.md
+
 ### 调用方式
 
 使用 `sessions_spawn` 工具创建独立的 Agent sessions：
@@ -76,11 +183,16 @@ sessions_spawn(
 | Agent | 职责 | 超时 | 详细信息 |
 |-------|------|------|----------|
 | **requirement-agent** | 需求理解 | 60秒 | agents/requirement-agent/AGENTS.md |
-| **research-agent** | 资料收集 | 120秒 | agents/research-agent/AGENTS.md |
+| **research-agent** | 资料收集 | **180秒** ⚠️ | agents/research-agent/AGENTS.md |
 | **content-agent** | 内容生产 | 90秒 | agents/content-agent/AGENTS.md |
-| **visual-agent** | 视觉生成 | 60秒 | agents/visual-agent/AGENTS.md |
-| **video-agent** | 视频生成 | 120秒 | agents/video-agent/AGENTS.md |
+| **visual-agent** | 视觉生成 | **180秒** ⚠️ | agents/visual-agent/AGENTS.md |
+| **video-agent** | 视频生成 | **360秒** ⚠️ | agents/video-agent/AGENTS.md |
 | **quality-agent** | 质量审核 | 30秒 | agents/quality-agent/AGENTS.md |
+
+**⚠️ 超时说明（2026-03-12 优化）**：
+- **research-agent**: 120秒 → 180秒（+50%，多源搜索需要更多时间）
+- **visual-agent**: 60秒 → 180秒（+200%，AI 生成图片需要 30-60秒/张）
+- **video-agent**: 120秒 → 360秒（+200%，图片生成+视频合成需要 5-6分钟）
 
 **注意**: 每个 Agent 的详细说明在各自的 AGENTS.md 文件中。
 

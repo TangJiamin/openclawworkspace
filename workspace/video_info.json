@@ -1,0 +1,10 @@
+{
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "totalFrames": 1200,
+  "duration": 40,
+  "format": "PNG sequence",
+  "framesDirectory": "frames",
+  "framePattern": "frame_%06d.png"
+}

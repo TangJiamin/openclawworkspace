@@ -9,7 +9,23 @@
  * - Session and token management
  */
 
-import type { OpenClawConfig } from 'openclaw/plugin-sdk';
+import type {
+  OpenClawConfig,
+  OpenClawPluginApi,
+  ChannelLogSink as SDKChannelLogSink,
+  ChannelAccountSnapshot as SDKChannelAccountSnapshot,
+  ChannelGatewayContext as SDKChannelGatewayContext,
+  ChannelPlugin as SDKChannelPlugin,
+} from "openclaw/plugin-sdk";
+import { mergeAccountWithDefaults } from "./config";
+
+export interface DingtalkPluginModule {
+  id: string;
+  name: string;
+  description?: string;
+  configSchema?: unknown;
+  register?: (api: OpenClawPluginApi) => void | Promise<void>;
+}
 
 /**
  * DingTalk channel configuration (extends base OpenClaw config)
@@ -22,12 +38,14 @@ export interface DingTalkConfig extends OpenClawConfig {
   agentId?: string;
   name?: string;
   enabled?: boolean;
-  dmPolicy?: 'open' | 'pairing' | 'allowlist';
-  groupPolicy?: 'open' | 'allowlist';
+  dmPolicy?: "open" | "pairing" | "allowlist";
+  groupPolicy?: "open" | "allowlist";
   allowFrom?: string[];
+  mediaUrlAllowlist?: string[];
   showThinking?: boolean;
+  thinkingMessage?: string;
   debug?: boolean;
-  messageType?: 'markdown' | 'card';
+  messageType?: "markdown" | "card";
   cardTemplateId?: string;
   cardTemplateKey?: string;
   groups?: Record<string, { systemPrompt?: string }>;
@@ -37,6 +55,16 @@ export interface DingTalkConfig extends OpenClawConfig {
   initialReconnectDelay?: number;
   maxReconnectDelay?: number;
   reconnectJitter?: number;
+  /** Maximum number of runtime reconnect cycles before giving up (default: 10) */
+  maxReconnectCycles?: number;
+  /** Whether to use ConnectionManager; when false, use DWClient native keepAlive+autoReconnect */
+  useConnectionManager?: boolean;
+  /** Maximum inbound media file size in MB (overrides runtime default when set) */
+  mediaMaxMb?: number;
+  proactivePermissionHint?: {
+    enabled?: boolean;
+    cooldownHours?: number;
+  };
 }
 
 /**
@@ -49,21 +77,33 @@ export interface DingTalkChannelConfig {
   robotCode?: string;
   corpId?: string;
   agentId?: string;
-  dmPolicy?: 'open' | 'pairing' | 'allowlist';
-  groupPolicy?: 'open' | 'allowlist';
+  name?: string;
+  dmPolicy?: "open" | "pairing" | "allowlist";
+  groupPolicy?: "open" | "allowlist";
   allowFrom?: string[];
+  mediaUrlAllowlist?: string[];
   showThinking?: boolean;
+  thinkingMessage?: string;
   debug?: boolean;
-  messageType?: 'markdown' | 'card';
+  messageType?: "markdown" | "card";
   cardTemplateId?: string;
   cardTemplateKey?: string;
   groups?: Record<string, { systemPrompt?: string }>;
   accounts?: Record<string, DingTalkConfig>;
-  // Connection robustness configuration
   maxConnectionAttempts?: number;
   initialReconnectDelay?: number;
   maxReconnectDelay?: number;
   reconnectJitter?: number;
+  /** Maximum number of runtime reconnect cycles before giving up (default: 10) */
+  maxReconnectCycles?: number;
+  /** Whether to use ConnectionManager; when false, use DWClient native keepAlive+autoReconnect */
+  useConnectionManager?: boolean;
+  /** Maximum inbound media file size in MB (overrides runtime default when set) */
+  mediaMaxMb?: number;
+  proactivePermissionHint?: {
+    enabled?: boolean;
+    cooldownHours?: number;
+  };
 }
 
 /**
@@ -117,18 +157,54 @@ export interface DingTalkInboundMessage {
   createAt: number;
   text?: {
     content: string;
+    isReplyMsg?: boolean; // 是否是回复消息
+    repliedMsg?: {
+      msgType?: string;
+      msgId?: string;
+      senderId?: string;
+      createdAt?: number;
+      content?: {
+        text?: string;
+        downloadCode?: string;
+        biz_custom_action_url?: string;
+        richText?: Array<{
+          msgType?: string;
+          type?: string;
+          content?: string;
+          text?: string;
+          code?: string;
+          atName?: string;
+          downloadCode?: string;
+        }>;
+      };
+    };
   };
   content?: {
     downloadCode?: string;
     fileName?: string;
     recognition?: string;
+    spaceId?: string;
+    fileId?: string;
+    biz_custom_action_url?: string;
     richText?: Array<{
       type: string;
       text?: string;
       atName?: string;
-      downloadCode?: string; // For picture type in richText
+      downloadCode?: string;
     }>;
+    quoteContent?: string;
   };
+  // Legacy 引用格式
+  quoteMessage?: {
+    msgId?: string;
+    msgtype?: string;
+    text?: { content: string };
+    senderNick?: string;
+    senderId?: string;
+  };
+  // 富媒体引用，仅有消息ID的情况（包括手机端和PC端）
+  originalMsgId?: string;
+  originalProcessQueryKey?: string;
   conversationType: string;
   conversationId: string;
   conversationTitle?: string;
@@ -140,6 +216,26 @@ export interface DingTalkInboundMessage {
 }
 
 /**
+ * Quoted/reply message metadata extracted from repliedMsg.
+ * Populated when isReplyMsg is true; downstream handlers use these fields
+ * to download quoted media or look up cached card content.
+ */
+export interface QuotedInfo {
+  prefix: string;
+  mediaDownloadCode?: string;
+  mediaType?: string;
+  isQuotedFile?: boolean;
+  isQuotedCard?: boolean;
+  isQuotedDocCard?: boolean;
+  docSpaceId?: string;
+  docFileId?: string;
+  cardCreatedAt?: number;
+  processQueryKey?: string;
+  fileCreatedAt?: number;
+  msgId?: string;
+}
+
+/**
  * Extracted message content for unified processing
  */
 export interface MessageContent {
@@ -147,6 +243,9 @@ export interface MessageContent {
   mediaPath?: string;
   mediaType?: string;
   messageType: string;
+  docSpaceId?: string;
+  docFileId?: string;
+  quoted?: QuotedInfo;
 }
 
 /**
@@ -160,7 +259,10 @@ export interface SendMessageOptions {
   mediaPath?: string;
   filePath?: string;
   mediaUrl?: string;
-  mediaType?: 'image' | 'voice' | 'video' | 'file';
+  mediaType?: "image" | "voice" | "video" | "file";
+  accountId?: string;
+  cardUpdateMode?: "replace" | "append" | "finalize";
+  cardFinalize?: boolean;
 }
 
 /**
@@ -232,7 +334,7 @@ export interface AxiosRequestConfig {
   method?: string;
   data?: any;
   headers?: Record<string, string>;
-  responseType?: 'arraybuffer' | 'json' | 'text';
+  responseType?: "arraybuffer" | "json" | "text";
 }
 
 /**
@@ -282,24 +384,29 @@ export interface RetryOptions {
 }
 
 /**
- * Logger interface
+ * Channel log sink
  */
-export interface Logger {
-  debug?: (message: string, ...args: any[]) => void;
-  info?: (message: string, ...args: any[]) => void;
-  warn?: (message: string, ...args: any[]) => void;
-  error?: (message: string, ...args: any[]) => void;
-}
+export type ChannelLogSink = SDKChannelLogSink;
+
+/**
+ * @deprecated Use ChannelLogSink instead
+ */
+export type Logger = ChannelLogSink;
+
+/**
+ * Channel account snapshot
+ */
+export type ChannelAccountSnapshot = SDKChannelAccountSnapshot;
+
+/**
+ * @deprecated Use ChannelAccountSnapshot instead
+ */
+export type ChannelSnapshot = ChannelAccountSnapshot;
 
 /**
  * Plugin gateway start context
  */
-export interface GatewayStartContext {
-  account: ResolvedAccount;
-  cfg: OpenClawConfig;
-  abortSignal?: AbortSignal;
-  log?: Logger;
-}
+export type GatewayStartContext = SDKChannelGatewayContext<ResolvedAccount>;
 
 /**
  * Plugin gateway account stop result
@@ -311,66 +418,7 @@ export interface GatewayStopResult {
 /**
  * DingTalk channel plugin definition
  */
-export interface DingTalkChannelPlugin {
-  id: string;
-  meta: {
-    id: string;
-    label: string;
-    selectionLabel: string;
-    docsPath: string;
-    blurb: string;
-    aliases: string[];
-  };
-  capabilities: {
-    chatTypes: string[];
-    reactions: boolean;
-    threads: boolean;
-    media: boolean;
-    nativeCommands: boolean;
-    blockStreaming: boolean;
-  };
-  reload: {
-    configPrefixes: string[];
-  };
-  config: {
-    listAccountIds: (cfg: OpenClawConfig) => string[];
-    resolveAccount: (cfg: OpenClawConfig, accountId?: string) => ResolvedAccount;
-    defaultAccountId: () => string;
-    isConfigured: (account: any) => boolean;
-    describeAccount: (account: any) => AccountDescriptor;
-  };
-  security: {
-    resolveDmPolicy: (params: any) => any;
-  };
-  groups: {
-    resolveRequireMention: (params: any) => boolean;
-  };
-  messaging: {
-    normalizeTarget: (params: any) => any;
-    targetResolver: {
-      looksLikeId: (id: string) => boolean;
-      hint: string;
-    };
-  };
-  outbound: {
-    deliveryMode: string;
-    sendText: (params: any) => Promise<{ ok: boolean; data?: any; error?: any }>;
-  };
-  gateway: {
-    startAccount: (ctx: GatewayStartContext) => Promise<GatewayStopResult>;
-  };
-  status: {
-    defaultRuntime: {
-      accountId: string;
-      running: boolean;
-      lastStartAt: null;
-      lastStopAt: null;
-      lastError: null;
-    };
-    probe: (params: any) => Promise<{ ok: boolean; error?: string; details?: any }>;
-    buildChannelSummary: (params: any) => any;
-  };
-}
+export type DingTalkChannelPlugin = SDKChannelPlugin<ResolvedAccount & { configured: boolean }>;
 
 /**
  * Result of target resolution validation
@@ -415,7 +463,7 @@ export interface SendMediaParams {
  * DingTalk outbound handler configuration
  */
 export interface DingTalkOutboundHandler {
-  deliveryMode: 'direct' | 'queued' | 'batch';
+  deliveryMode: "direct" | "queued" | "batch";
   resolveTarget: (params: ResolveTargetParams) => TargetResolutionResult;
   sendText: (params: SendTextParams) => Promise<{ ok: boolean; data?: any; error?: any }>;
   sendMedia?: (params: SendMediaParams) => Promise<{ ok: boolean; data?: any; error?: any }>;
@@ -425,10 +473,10 @@ export interface DingTalkOutboundHandler {
  * AI Card status constants
  */
 export const AICardStatus = {
-  PROCESSING: '1',
-  INPUTING: '2',
-  FINISHED: '3',
-  FAILED: '5',
+  PROCESSING: "1",
+  INPUTING: "2",
+  FINISHED: "3",
+  FAILED: "5",
 } as const;
 
 /**
@@ -441,12 +489,16 @@ export type AICardState = (typeof AICardStatus)[keyof typeof AICardStatus];
  */
 export interface AICardInstance {
   cardInstanceId: string;
+  processQueryKey?: string;
   accessToken: string;
   conversationId: string;
+  accountId?: string;
+  storePath?: string;
   createdAt: number;
   lastUpdated: number;
   state: AICardState; // Current card state: PROCESSING, INPUTING, FINISHED, FAILED
   config?: DingTalkConfig; // Store config reference for token refresh
+  lastStreamedContent?: string;
 }
 
 /**
@@ -466,11 +518,11 @@ export interface AICardStreamingRequest {
  * Connection state enum for lifecycle management
  */
 export enum ConnectionState {
-  DISCONNECTED = 'DISCONNECTED',
-  CONNECTING = 'CONNECTING',
-  CONNECTED = 'CONNECTED',
-  DISCONNECTING = 'DISCONNECTING',
-  FAILED = 'FAILED',
+  DISCONNECTED = "DISCONNECTED",
+  CONNECTING = "CONNECTING",
+  CONNECTED = "CONNECTED",
+  DISCONNECTING = "DISCONNECTING",
+  FAILED = "FAILED",
 }
 
 /**
@@ -481,6 +533,10 @@ export interface ConnectionManagerConfig {
   initialDelay: number;
   maxDelay: number;
   jitter: number;
+  /** Maximum number of runtime reconnect cycles before giving up (default: 10) */
+  maxReconnectCycles?: number;
+  /** Callback invoked when connection state changes */
+  onStateChange?: (state: ConnectionState, error?: string) => void;
 }
 
 /**
@@ -491,4 +547,110 @@ export interface ConnectionAttemptResult {
   attempt: number;
   error?: Error;
   nextDelay?: number;
+}
+
+// ============ Onboarding Helper Functions ============
+
+const DEFAULT_ACCOUNT_ID = "default";
+
+/**
+ * List all DingTalk account IDs from config
+ */
+export function listDingTalkAccountIds(cfg: OpenClawConfig): string[] {
+  const dingtalk = cfg.channels?.dingtalk as DingTalkChannelConfig | undefined;
+  if (!dingtalk) {
+    return [];
+  }
+
+  const accountIds: string[] = [];
+
+  // Check for direct configuration (default account)
+  if (dingtalk.clientId || dingtalk.clientSecret) {
+    accountIds.push(DEFAULT_ACCOUNT_ID);
+  }
+
+  // Check accounts object
+  if (dingtalk.accounts) {
+    accountIds.push(...Object.keys(dingtalk.accounts));
+  }
+
+  return accountIds;
+}
+
+/**
+ * Resolved DingTalk account with configuration status
+ */
+export interface ResolvedDingTalkAccount extends DingTalkConfig {
+  accountId: string;
+  configured: boolean;
+}
+
+/**
+ * Resolve a specific DingTalk account configuration
+ */
+export function resolveDingTalkAccount(
+  cfg: OpenClawConfig,
+  accountId?: string | null,
+): ResolvedDingTalkAccount {
+  const id = accountId || DEFAULT_ACCOUNT_ID;
+  const dingtalk = cfg.channels?.dingtalk as DingTalkChannelConfig | undefined;
+
+  // If default account, return top-level config
+  if (id === DEFAULT_ACCOUNT_ID) {
+    const config: DingTalkConfig = {
+      clientId: dingtalk?.clientId ?? "",
+      clientSecret: dingtalk?.clientSecret ?? "",
+      robotCode: dingtalk?.robotCode,
+      corpId: dingtalk?.corpId,
+      agentId: dingtalk?.agentId,
+      name: dingtalk?.name,
+      enabled: dingtalk?.enabled,
+      dmPolicy: dingtalk?.dmPolicy,
+      groupPolicy: dingtalk?.groupPolicy,
+      allowFrom: dingtalk?.allowFrom,
+      showThinking: dingtalk?.showThinking,
+      thinkingMessage: dingtalk?.thinkingMessage,
+      debug: dingtalk?.debug,
+      messageType: dingtalk?.messageType,
+      cardTemplateId: dingtalk?.cardTemplateId,
+      cardTemplateKey: dingtalk?.cardTemplateKey,
+      groups: dingtalk?.groups,
+      accounts: dingtalk?.accounts,
+      maxConnectionAttempts: dingtalk?.maxConnectionAttempts,
+      initialReconnectDelay: dingtalk?.initialReconnectDelay,
+      maxReconnectDelay: dingtalk?.maxReconnectDelay,
+      reconnectJitter: dingtalk?.reconnectJitter,
+      maxReconnectCycles: dingtalk?.maxReconnectCycles,
+      useConnectionManager: dingtalk?.useConnectionManager,
+      mediaMaxMb: dingtalk?.mediaMaxMb,
+      proactivePermissionHint: dingtalk?.proactivePermissionHint,
+    };
+    return {
+      ...config,
+      accountId: id,
+      configured: Boolean(config.clientId && config.clientSecret),
+    };
+  }
+
+  // If named account, merge channel-level defaults with account-level overrides
+  const accountConfig = dingtalk?.accounts?.[id];
+  if (accountConfig) {
+    const merged = mergeAccountWithDefaults(
+      dingtalk as DingTalkConfig,
+      accountConfig,
+    );
+    return {
+      ...merged,
+      accountId: id,
+      configured: Boolean(merged.clientId && merged.clientSecret),
+    };
+  }
+
+  // Account doesn't exist, return empty config
+  return {
+    clientId: "",
+    clientSecret: "",
+    accountId: id,
+    configured: false,
+  };
 }

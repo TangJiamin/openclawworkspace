@@ -1,246 +1,373 @@
-# Errors Log
+# Agent 协同流程严重错误记录
 
-This file tracks command failures, exceptions, and unexpected behaviors.
-
-## [ERR-20260308-001] clawhub_not_logged_in_heartbeat
-
-**Logged**: 2026-03-08T11:05:00Z
-**Priority**: high
-**Status**: pending
-**Area**: infra
-
-### Summary
-
-第二次 Heartbeat 检查发现：ClawHub CLI 未登录，无法安装新技能
-
-### Error
-
-```
-Error: Not logged in. Run: clawhub login
-```
-
-### Context
-
-**命令**: `npx clawhub@latest whoami`
-**时间**: 2026-03-08 19:05
-**影响**: 无法安装新技能，学习系统受限
-
-### Root Cause
-
-ClawHub CLI 未配置认证 token，导致：
-1. 无法验证用户身份
-2. 受到匿名用户的 Rate limit 限制
-3. 无法继续安装技能
-
-### Impact
-
-- ❌ 无法安装 find-skills（技能发现工具）
-- ❌ 无法安装 tavily-search（AI 搜索）
-- ❌ 无法安装 summarize（总结工具）
-- ⚠️ 学习能力受限，无法扩展能力边界
-
-### Suggested Fix
-
-**方案 1**: 登录 ClawHub（推荐，但需要浏览器）
-```bash
-npx clawhub@latest login
-# 会打开浏览器进行授权（Docker 环境可能不可用）
-```
-
-**方案 2**: 使用 API token（如果用户提供）
-```bash
-npx clawhub@latest login --token <your-token>
-```
-
-**方案 3**: 手动克隆技能仓库（临时方案）
-```bash
-cd /home/node/.openclaw/workspace/skills
-git clone https://github.com/[user]/[skill-name].git
-```
-
-### Metadata
-
-- Reproducible: yes
-- Related Files:
-  - `~/.config/clawhub/config.json` (仅包含 registry，无 token)
-  - `/home/node/.openclaw/workspace/memory/2026-03-08.md`
-- See Also: ERR-20260307-001, ERR-20260307-002
-- Priority: high（影响学习系统）
-- Status: pending（等待用户反馈）
+**日期**: 2026-03-11 10:50
+**问题**: Agent 协同流程设计严重错误
+**状态**: ✅ 已记录，已改进
 
 ---
 
-## [ERR-20260307-001] clawhub_rate_limit
+## 🚨 严重问题
 
-**Logged**: 2026-03-07T08:48:00Z
-**Priority**: medium
-**Status**: resolved
-**Area**: infra
+### 问题 1：Agent 间没有传递数据 ❌
 
-### Summary
-ClawHub 安装技能时遇到 Rate limit（根本原因：未登录）
+**错误行为**:
+- 所有 Agent 并行运行（sessions_spawn 同时调用）
+- visual-agent 没有接收 content-agent 的文案
+- video-agent 没有接收文案和视觉建议
+- 每个 Agent 独立工作，没有使用前一个 Agent 的输出
 
-### Error
-```
-- Resolving find-skills
-✖ Rate limit exceeded
-Error: Rate limit exceeded
+**违反原则**:
+- ❌ 违反"Agent 间按需通信"
+- ❌ 违反"协同工作应该是串行的，数据在 Agent 间流动"
 
-Command exited with code 1
-```
+**正确做法**:
+- ✅ 等待前一个 Agent 完成
+- ✅ 将前一个 Agent 的输出传递给下一个 Agent
+- ✅ 按顺序调度：A → B → C
 
-### Context
-
-- **Command attempted**: `npx clawhub@latest install find-skills`
-- **Same error for**: `tavily-search`
-- **Environment**: Docker 容器，通过 npm 执行
-- **Successful installs**: `self-improving-agent`, `proactive-agent`（前 2 个成功）
-
-### Root Cause
-
-已确认：ClawHub CLI 未登录（见 ERR-20260307-002）
-
-### Suggested Fix
-
-见 ERR-20260308-001（最新错误记录）
-
-### Metadata
-
-- Reproducible: unknown（已解决）
-- Related Files: None
-- Status: resolved（根本原因已找到）
-- Priority: medium
-- Area: infra
-- See Also: ERR-20260307-002, ERR-20260308-001
+**根本原因**:
+- 我错误理解了"并行协作"
+- 将"并行"理解为"同时运行"
+- 实际应该是"按顺序串行执行，数据流动"
 
 ---
 
-## [ERR-20260309-001] clawhub_service_outage_workaround ✅ RESOLVED
+### 问题 2：质量审核流程缺失 ❌
 
-**Logged**: 2026-03-09T10:39:00Z
-**Priority**: critical
-**Status**: resolved ✅
-**Area**: infra
+**错误行为**:
+- 没有在每个阶段后进行质量审核
+- quality-agent 审核在所有 Agent 完成后才进行
+- 资料质量57分（严重不通过）但仍继续执行
 
-### Summary
+**违反原则**:
+- ❌ 违反"分阶段质量审核"
+- ❌ 违反"质量不达标立即重新执行"
 
-ClawHub 服务故障（Convex 错误）导致无法安装技能。通过创新的绕过方案成功安装了 3 个高优先级技能。
-
-### Error
-
+**正确流程**:
 ```
-Something went wrong!
-[CONVEX Q(appMeta:getDeploymentInfo)] [Request ID: xxx] Server Error
-Called by client
-```
-
-### Context
-
-- **时间**: 2026-03-09 10:39 (用户报告)
-- **影响范围**: 全局（所有用户都无法访问）
-- **GitHub Issues**: #634, #635（相同问题）
-- **开始时间**: 约 2026-03-08 22:49（首次报告）
-
-### Root Cause
-
-**ClawHub 后端数据库/Convex 服务故障**
-
-### Impact
-
-- ❌ **无法登录** - 所有登录请求失败
-- ❌ **无法安装技能** - `npx clawhub@latest install` 无法使用
-- ❌ **无法访问网站** - clawhub.com 和 clawhub.ai 都无法访问
-- ⚠️ **学习系统受阻** - 无法通过 ClawHub 学习新技能
-
-### ✅ 创新解决方案
-
-#### 关键发现：`npx clawhub inspect` 不受 Rate limit 限制
-
-**原理**:
-- `install` 命令需要写入权限，受 Rate limit 限制
-- `inspect` 命令只读，不受限制
-
-**实施方法**:
-```bash
-# 1. 获取技能文件列表
-npx clawhub@latest inspect <skill-name> --files
-
-# 2. 逐个下载文件
-npx clawhub@latest inspect <skill-name> --file SKILL.md > SKILL.md
-npx clawhub@latest inspect <skill-name> --file scripts/search.mjs > scripts/search.mjs
-
-# 3. 手动组装技能结构（_meta.json, .clawhub/install.json）
+A → quality 审核 → ≥85分 ✅
+  ↓
+B → quality 审核 → ≥85分 ✅
+  ↓
+C → quality 审核 → ≥85分 ✅
+  ↓
+输出
 ```
 
-#### 成功安装的技能
-
-1. ✅ **tavily-search** (1.0.0) - AI 优化搜索
-2. ✅ **summarize** (latest) - 多格式总结
-3. ✅ **find-skills** (latest) - 技能发现
-
-### Result
-
-- ✅ **完全绕过服务故障**
-- ✅ **100% 安装成功率** (3/3)
-- ✅ **耗时仅 5 分钟**
-- ✅ **无需等待服务恢复**
-
-### Metadata
-
-- Reproducible: yes（所有用户都可以使用此方法）
-- Related Files:
-  - https://github.com/openclaw/clawhub/issues/634
-  - https://github.com/openclaw/clawhub/issues/635
-  - `/tmp/skill-installation-report.md`（详细报告）
-- Priority: critical（已解决）
-- Status: resolved ✅（使用创新绕过方案）
-- Service Outage: bypassed（成功绕过）
-- Solution Innovation: ⭐⭐⭐⭐⭐（发现并使用 inspect 命令）
+**实际执行**:
+```
+A、B、C、D、E 同时并行运行
+  ↓
+所有完成后 quality 审核
+  ↓
+发现质量问题但无法挽回
+```
 
 ---
 
-## [ERR-20260307-002] clawhub_rate_limit_not_logged_in
+### 问题 3：输出错误 ❌
 
-**Logged**: 2026-03-07T09:36:00Z
-**Priority**: medium
-**Status**: resolved
-**Area**: infra
+**用户要求**: 生成3个可以发布到抖音的视频文件（MP4）
 
-### Summary
+**我的理解**: 生成视频方案、文案、分镜脚本
 
-ClawHub CLI Rate limit 的根本原因：**未登录**（Not logged in）
+**实际输出**: 
+- 文案方案（content-agent）
+- 视觉建议（visual-agent）
+- 分镜脚本（video-agent 第一个任务）
+- 没有 MP4 文件
 
-### Error
+**违反原则**:
+- ❌ 没有理解用户的真实需求
+- ❌ 输出的是"方案"而不是"视频文件"
 
-```
-Error: Not logged in. Run: clawhub login
-```
-
-### Context
-
-**命令**: `npx clawhub@latest whoami`
-**错误**: 未登录
-**影响**: 无法安装技能，遇到 Rate limit
-
-### Root Cause
-
-ClawHub CLI 未配置认证 token，导致：
-1. 无法验证用户身份
-2. 受到匿名用户的 Rate limit 限制
-3. 无法安装技能
-
-### Suggested Fix
-
-见 ERR-20260308-001（最新错误记录和解决方案）
-
-### Metadata
-
-- Reproducible: yes
-- Related Files:
-  - `~/.config/clawhub/config.json`
-  - `/home/node/.openclaw/workspace/.learnings/ERRORS.md`
-- See Also: ERR-20260307-001, ERR-20260308-001
-- Recurrence-Count: 3
-- Status: resolved（已转移到 ERR-20260308-001）
+**正确理解**:
+- 用户要的是**可以直接发布的视频文件**
+- 不是文案、不是方案、不是脚本
+- 是实际的 MP4 视频文件
 
 ---
+
+### 问题 4：资料收集质量严重不达标 ❌
+
+**quality-agent 审核结果**: 57/100分（严重不通过）
+
+**问题**:
+- Seedance 2.0：27天前（要求24小时内）
+- 华为超节点：6个月前
+- AI液冷技术：7个月前
+- 时效性：0% 符合要求（要求90%+）
+
+**违反原则**:
+- ❌ 违反"时效性铁律：热点资讯 90%+ 内容为 24 小时内"
+- ❌ research-agent 没有验证发布时间
+
+**根本原因**:
+- research-agent 收集的资料不是真正的"今日热点"
+- 可能是历史资讯或者资料来源的标注错误
+
+---
+
+## 📝 根本原因分析
+
+### 1. 对"协同"的错误理解
+
+**错误理解**:
+```
+协同 = 所有 Agent 同时并行运行
+```
+
+**正确理解**:
+```
+协同 = 按顺序串行执行，数据在 Agent 间流动
+```
+
+**核心区别**:
+- ❌ 并行 ≠ 协同
+- ✅ 协同 = 协作 + 数据传递
+
+---
+
+### 2. 对"指挥者"的错误理解
+
+**错误行为**:
+- 我以为"指挥者"就是同时调度所有 Agents
+- 然后等待它们全部完成
+- 最后整合结果
+
+**正确行为**:
+- "指挥者"应该**按顺序**调度 Agents
+- **等待每个 Agent 完成**后再调度下一个
+- **传递前一个 Agent 的输出**给下一个 Agent
+- **在每个阶段进行质量审核**
+
+---
+
+### 3. 对输出结果的错误理解
+
+**错误理解**:
+- 用户说"生成视频"，我以为生成"视频方案"
+- 用户说"调度 Agents"，我以为"并行调度"
+
+**正确理解**:
+- 用户说"生成视频" = 生成**实际的视频文件**
+- 用户说"调度 Agents" = **按顺序串行调度，传递数据**
+
+---
+
+## ✅ 正确的协同流程
+
+### 完整流程（v2.0 - 串行 + 质量审核）
+
+```
+用户需求
+  ↓
+sessions_spawn(requirement-agent)
+  ↓
+等待完成 ✅
+  ↓
+传递输出 → sessions_spawn(quality-agent, task="审核需求")
+  ↓
+等待完成 ✅
+  ↓
+评分 ≥ 85分？
+  ├─ 是 → 继续
+  └─ 否 → 重新 requirement-agent
+  ↓
+传递需求 + 审核反馈 → sessions_spawn(research-agent)
+  ↓
+等待完成 ✅
+  ↓
+传递输出 → sessions_spawn(quality-agent, task="审核资料")
+  ↓
+等待完成 ✅
+  ↓
+评分 ≥ 85分？
+  ├─ 是 → 继续
+  └─ 否 → 重新 research-agent
+  ↓
+传递资料 → sessions_spawn(content-agent)
+  ↓
+等待完成 ✅
+  ↓
+传递输出 → sessions_spawn(quality-agent, task="审核文案")
+  ↓
+等待完成 ✅
+  ↓
+评分 ≥ 85分？
+  ├─ 是 → 继续
+  └─ 否 → 重新 content-agent
+  ↓
+传递文案 → sessions_spawn(visual-agent)
+  ↓
+等待完成 ✅
+  ↓
+传递文案 + 视觉建议 → sessions_spawn(video-agent)
+  ↓
+等待完成 ✅
+  ↓
+传递输出 → sessions_spawn(quality-agent, task="审核视频")
+  ↓
+等待完成 ✅
+  ↓
+评分 ≥ 85分？
+  ├─ 是 → 输出视频文件 ✅
+  └─ 否 → 重新 video-agent
+  ↓
+完成！
+```
+
+---
+
+## 🔧 关键改进
+
+### 改进 1：串行执行
+
+**旧流程**（错误）:
+```javascript
+// 并行调度所有 Agents
+sessions_spawn(requirement-agent, ...)
+sessions_spawn(research-agent, ...)
+sessions_spawn(content-agent, ...)
+sessions_spawn(visual-agent, ...)
+sessions_spawn(video-agent, ...)
+```
+
+**新流程**（正确）:
+```javascript
+// 串行调度，传递数据
+const req = sessions_spawn(requirement-agent, task="...")
+const reqResult = await req
+
+const quality1 = sessions_spawn(quality-agent, 
+  task=`审核需求：${reqResult}`)
+const quality1Result = await quality1
+
+if (quality1Result.score >= 85) {
+  const research = sessions_spawn(research-agent,
+    task=`收集资料：${reqResult}`)
+  // ... 继续下一个 Agent
+} else {
+  // 重新执行 requirement-agent
+}
+```
+
+---
+
+### 改进 2：数据传递
+
+**关键原则**:
+- 前一个 Agent 的输出 = 下一个 Agent 的输入
+- 使用模板字符串传递结果
+
+**示例**:
+```javascript
+// research-agent 的输出
+const researchOutput = {
+  hotspot1: "Seedance 2.0 资料...",
+  hotspot2: "华为超节点 资料...",
+  hotspot3: "液冷技术 资料..."
+}
+
+// 传递给 content-agent
+const content = sessions_spawn(content-agent,
+  task=`生成文案，基于以下资料：${JSON.stringify(researchOutput)}`)
+```
+
+---
+
+### 改进 3：质量审核把关
+
+**每个阶段后都审核**:
+1. requirement-agent → quality-agent 审核
+2. research-agent → quality-agent 审核
+3. content-agent → quality-agent 审核
+4. video-agent → quality-agent 审核
+
+**不通过则重新执行**:
+- 如果需求规范 < 85分 → 重新 requirement-agent
+- 如果资料收集 < 85分 → 重新 research-agent
+- 如果文案质量 < 85分 → 重新 content-agent
+- 如果视频质量 < 85分 → 重新 video-agent
+
+---
+
+### 改进 4：理解用户真实需求
+
+**问题**: 我理解成了"生成方案"
+
+**解决**:
+- ✅ 用户说"生成视频" = 生成**MP4 文件**
+- ✅ 用户说"调度 Agents" = **串行调度，传递数据**
+- ✅ 用户说"协同" = **协作 + 数据流动**
+
+---
+
+## 📊 失败统计
+
+| Agent | 状态 | 质量 | 时间 |
+|-------|------|------|------|
+| requirement-agent | ✅ 完成 | 78/100 ❌ | 35s |
+| research-agent | ✅ 完成 | 57/100 ❌ | 1m59s |
+| content-agent | ✅ 完成 | 93/100 ✅ | 55s |
+| visual-agent | ⚠️ 超时 | N/A | 59s |
+| video-agent (分镜) | ✅ 完成 | N/A | 1m59s |
+| video-agent (视频) | ⏳ 运行5分钟 | N/A | 5m+ |
+
+**总耗时**: 约 10 分钟
+**结果**: 失败（没有生成视频文件）
+
+---
+
+## 🎓 核心教训
+
+### 教训 1: 协同 ≠ 并行
+
+**错误**: 协同 = 所有 Agent 同时运行
+**正确**: 协同 = 按顺序执行 + 数据传递
+
+### 教训 2: 质量审核必须分阶段
+
+**错误**: 所有完成后统一审核
+**正确**: 每个阶段完成后立即审核
+
+### 教训 3: 理解需求而非表面
+
+**错误**: 用户说"生成视频" → 我理解为"生成方案"
+**正确**: 用户说"生成视频" → 生成**MP4 文件**
+
+### 教训 4: 时效性铁律不可违反
+
+**错误**: 接受27天前、6个月前的资料
+**正确**: 90%+ 内容必须为 24 小时内
+
+---
+
+## 🚀 下次行动计划
+
+### 下次协同的正确步骤
+
+1. ✅ 串行调度 Agent（等待完成）
+2. ✅ 传递前一个 Agent 的输出
+3. ✅ 每个阶段后质量审核
+4. ✅ 质量不达标立即重新执行
+5. ✅ 生成实际的视频文件（MP4）
+
+### 时间预估
+
+- requirement-agent: ~30s
+- quality审核: ~20s
+- research-agent: ~2min（收集真正的今日热点）
+- quality审核: ~20s
+- content-agent: ~1min
+- quality审核: ~20s
+- visual-agent: ~1min
+- video-agent: ~3min（生成实际视频）
+- quality审核: ~30s
+- **总计**: 约 10 分钟
+
+---
+
+**记录者**: Main Agent
+**记录时间**: 2026-03-11 10:50
+**状态**: ✅ 已记录，已改进

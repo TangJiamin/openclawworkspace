@@ -82,7 +82,9 @@ fi
 
 # 构建 JSON payload
 build_payload() {
-    local payload="{\"model\": \"$MODEL\", \"params\": {\"prompt\": \"$PROMPT\""
+    # 转义提示词中的特殊字符
+    local escaped_prompt=$(echo "$PROMPT" | sed 's/"/\\"/g')
+    local payload="{\"model\": \"$MODEL\", \"params\": {\"prompt\": \"$escaped_prompt\""
 
     # 添加可选参数
     if [ -n "$RATIO" ]; then
@@ -103,7 +105,7 @@ build_payload() {
 
     # Flux Realism 特殊参数
     if [[ "$MODEL" == *"flux-realism"* ]]; then
-        payload="$payload, \"image_size\": \"${RESOLUTION:-square_hd}\"
+        payload="$payload, \"image_size\": \"${RESOLUTION:-square_hd}\""
         payload="$payload, \"num_inference_steps\": 28"
         payload="$payload, \"guidance_scale\": 3.5"
     fi
@@ -186,7 +188,8 @@ poll_task() {
         fi
 
         # 任务进行中
-        echo "   状态: $status ($((attempt * POLL_INTERVAL))s)"
+        local elapsed=$((attempt * POLL_INTERVAL))
+        echo "   状态: $status ${elapsed}s"
         sleep $POLL_INTERVAL
         attempt=$((attempt + 1))
     done

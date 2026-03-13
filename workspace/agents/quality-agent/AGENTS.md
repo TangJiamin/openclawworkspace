@@ -103,3 +103,57 @@ AI 模型分析（多维度）
 **维护者**: Main Agent  
 **版本**: v3.1 - 精简版  
 **最后更新**: 2026-03-09
+
+---
+
+## 📁 产出管理
+
+### 目录结构
+
+```
+agents/$(AGENT_NAME)/
+└── output/
+    └── task-YYYYMMDD-HHMMSS/
+        ├── data.json
+        ├── summary.md
+        └── ...
+```
+
+### 使用方法
+
+```bash
+# 创建产出目录（自动生成时间戳任务ID）
+OUTPUT_DIR=$(bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh create $(AGENT_NAME))
+
+# 写入产出文件
+cat > "$OUTPUT_DIR/result.json" << 'DATA'
+{
+  "status": "success",
+  "data": {...}
+}
+DATA
+
+echo "✅ 产出已保存到: $OUTPUT_DIR"
+```
+
+### 列出产出
+
+```bash
+# 列出所有 Agent 的产出
+bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh list
+
+# 列出当前 Agent 的产出
+bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh list $(AGENT_NAME)
+```
+
+### 清理旧产出
+
+```bash
+# 清理7天前的产出
+bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh clean $(AGENT_NAME) 7
+```
+
+### 详细文档
+
+- 快速开始: `docs/AGENT-OUTPUT-QUICK-START.md`
+- 完整指南: `docs/AGENT-OUTPUT-GUIDE.md`

@@ -20,6 +20,30 @@
 - **位置**: `/home/node/.openclaw/workspace/skills/metaso-search/`
 - **调用方式**: `bash skills/metaso-search/scripts/search.sh "$QUERY"`
 
+### Summarize ⭐ **新增**
+- **类型**: 多格式内容总结
+- **用途**: 快速理解参考资料（效率提升 3-5 倍）
+- **位置**: `/home/node/.openclaw/workspace/skills/summarize/`
+- **调用方式**:
+  ```bash
+  # 总结网页
+  npx summarize "https://example.com/article" --length medium
+  
+  # 总结 PDF
+  npx summarize "/path/to/file.pdf" --length medium
+  
+  # 总结 YouTube
+  npx summarize "https://youtu.be/..." --youtube auto
+  ```
+- **优势**:
+  - ✅ 支持 URL、PDF、YouTube、图片、音频
+  - ✅ 快速提取关键信息
+  - ✅ 灵活的输出长度
+- **使用场景**:
+  - 参考资料快速理解
+  - 长文档总结
+  - YouTube 视频总结
+
 ## 生成脚本
 
 ### generate-v2.sh（基础版本）

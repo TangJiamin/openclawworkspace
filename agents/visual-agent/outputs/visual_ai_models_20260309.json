@@ -1,0 +1,110 @@
+{
+  "topic": "AI大模型动态",
+  "platform": "小红书",
+  "style": "科技感、未来感",
+  "total_images": 8,
+  "tool": "即梦AI",
+  "images": [
+    {
+      "type": "封面",
+      "description": "AI大脑神经网络，发光的蓝色节点连接，悬浮在深色背景中，赛博朋克风格，科幻电影质感，3D渲染",
+      "size": "1080x1260",
+      "style_params": {
+        "art_style": "3D数字艺术",
+        "color_tone": "深蓝+霓虹蓝",
+        "lighting": "自发光",
+        "quality": "超高清",
+        "aspect_ratio": "3:4"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "机器人手与人类手相握，象征AI协作，未来主义风格，特写镜头，电影级CGI",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "CGI艺术",
+        "color_tone": "金属银+暖色",
+        "lighting": "戏剧性布光",
+        "quality": "电影级",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "全息投影界面，数据流瀑布般下落，黑客帝国风格，绿色代码雨，数字艺术",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "数字艺术",
+        "color_tone": "绿色+黑色",
+        "lighting": "荧光绿",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "AI芯片特写，金色电路纹理，微距摄影，科技产品广告风格",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "产品摄影",
+        "color_tone": "金色+黑色",
+        "lighting": "微距环形灯",
+        "quality": "超高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "虚拟现实VR头显，未来城市背景，赛博朋克都市，夜景霓虹，广角镜头",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "概念艺术",
+        "color_tone": "霓虹色",
+        "lighting": "城市夜景光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "AI实验室场景，科学家与全息数据交互，未来科技实验室，电影场景风格",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "电影概念图",
+        "color_tone": "冷色调",
+        "lighting": "实验室冷光",
+        "quality": "电影级",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "量子计算机核心，发光的量子比特，抽象科技艺术，3D抽象渲染",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "抽象3D",
+        "color_tone": "紫色+蓝色",
+        "lighting": "自发光",
+        "quality": "超高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "AI助手虚拟形象，全息投影女性形象，友好亲和，未来科技风格，人像CGI",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "角色设计",
+        "color_tone": "白色+蓝色",
+        "lighting": "柔和光",
+        "quality": "电影级",
+        "aspect_ratio": "1:1"
+      }
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-03-09T17:39:00+08:00",
+    "purpose": "小红书内容配图",
+    "tags": ["AI", "人工智能", "科技", "未来", "赛博朋克"]
+  }
+}

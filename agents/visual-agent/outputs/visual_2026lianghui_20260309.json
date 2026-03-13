@@ -1,0 +1,86 @@
+{
+  "topic": "2026年全国两会",
+  "platform": "小红书",
+  "style": "正式、权威、政治感",
+  "total_images": 6,
+  "tool": "Seedance",
+  "images": [
+    {
+      "type": "封面",
+      "description": "2026年全国两会主视觉，金色天安门背景，红色绸缎环绕，中央展示'2026全国两会'字样，庄重大气，中国政府官方设计风格，高清写实",
+      "size": "1080x1260",
+      "style_params": {
+        "art_style": "官方摄影",
+        "color_tone": "红色+金色",
+        "lighting": "明亮均匀",
+        "quality": "超高清",
+        "aspect_ratio": "3:4"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "人民大会堂全景，蓝天白云映衬，红旗飘扬，庄严宏伟，专业新闻摄影风格，广角镜头",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "新闻摄影",
+        "color_tone": "自然真实",
+        "lighting": "自然光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "人大代表举手表决场景，会议厅内景，庄重严肃，官方会议摄影风格，中景镜头",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "纪实摄影",
+        "color_tone": "室内自然光",
+        "lighting": "均匀柔和",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "政府工作报告文件特写，红色印章，钢笔笔迹，商务办公风格，微距摄影",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "产品摄影",
+        "color_tone": "暖色调",
+        "lighting": "侧光",
+        "quality": "超高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "记者发布会现场，发言人讲台，话筒阵列，闪光灯效果，新闻现场风格，标准镜头",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "新闻摄影",
+        "color_tone": "室内灯光",
+        "lighting": "舞台光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "国旗飘扬与国徽，蓝天背景， patriotic氛围，官方宣传海报风格，广角仰拍",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "官方海报",
+        "color_tone": "红色+蓝色",
+        "lighting": "明亮",
+        "quality": "超高清",
+        "aspect_ratio": "1:1"
+      }
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-03-09T17:39:00+08:00",
+    "purpose": "小红书内容配图",
+    "tags": ["两会", "2026", "政治", "官方", "新闻"]
+  }
+}

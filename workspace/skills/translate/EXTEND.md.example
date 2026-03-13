@@ -1,0 +1,32 @@
+# Translation Preferences (EXTEND.md)
+# 翻译偏好配置
+
+## 默认设置
+target_language: zh-CN
+default_mode: normal
+audience: general
+style: storytelling
+
+## 分块设置
+chunk_threshold: 4000
+chunk_max_words: 5000
+
+## 项目级术语表
+glossary:
+  # AI/ML Terms
+  Agent: 智能体
+  LLM: 大语言模型
+  RAG: 检索增强生成
+  Prompt: 提示词
+  
+  # Product Names
+  OpenClaw: OpenClaw
+  Baoyu: 宝玉
+  
+  # Common Terms
+  Use case: 用例
+  Workflow: 工作流
+
+## 外部术语表文件
+glossary_files:
+  - ./glossary-project.md

@@ -1,99 +1,80 @@
 # visual-agent - 操作指南
 
-**版本**: v3.1 - 精简版
-**更新**: 2026-03-09
+**版本**: v13.0 - 简洁版
+**更新**: 2026-03-12
 
 ---
 
-## ⚠️ 最高优先级
+## ⚠️ 核心原则
 
-1. **AI 模型决策** - 智能选择技术路线
-2. **质量第一** - 图片质量 ≥ 85 分
-3. **图片先行** - 视频生成必须先有图片
+**不要在提示词中写 bash 代码，调用脚本即可**
 
 ---
 
-## 🎨 图片质量标准
+## 🎯 核心职责
 
-**小红书评分**（≥ 85 分）:
-- 清晰度 (30%): ≥ 1080p
-- 风格匹配 (30%): ≥ 90 分
-- 尺寸比例 (20%): 3:4
-- 色彩搭配 (20%): ≥ 85 分
-- AI 科技感 (20%): ≥ 85 分
+**输入**: requirement-agent 的任务规范（JSON）
+**输出**: 图片 URL
 
 ---
 
-## 🛠️ 技术路线
+## 🛠️ 工作流程
 
-| 工具 | 用途 | 命令 |
-|------|------|------|
-| **Refly Canvas** | 可视化预览 | 对话式使用 |
-| **visual-generator** ⭐ | 智能生成 | 自动选择模型 |
-| **Xskill API** | 直接调用 | `bash xskill_call.sh <model> <prompt>` |
+### 步骤 1: 理解任务规范
 
-**AI 决策**:
-- 可视化预览 → Refly Canvas
-- 日常创作 → visual-generator（jimeng-5.0）
-- 商业项目 → visual-generator（flux-realism）
-- 视频生成 → visual-generator（seedance-pro）
+不重新分析需求，使用 requirement-agent 的输出。
+
+### 步骤 2: 调用生成脚本
+
+```bash
+bash /home/node/.openclaw/workspace/agents/visual-agent/generate.sh "$TASK_SPEC"
+```
+
+### 步骤 3: 返回图片 URL
+
+脚本会自动调用 xskill API 并返回图片 URL。
 
 ---
 
-## 🎯 visual-generator 智能路由
+## 📋 脚本说明
 
-```javascript
-// AI 模型决策
-if (场景 === "小红书") {
-  模型 = "jimeng-5.0"
-} else if (场景 === "商业") {
-  模型 = "flux-realism"
-} else if (场景 === "视频") {
-  模型 = "seedance-pro"
-} else {
-  模型 = "jimeng-5.0" // 默认
-}
+**文件**: `/home/node/node/.openclaw/workspace/agents/visual-agent/generate.sh`
+
+**功能**：
+- 解析任务规范
+- 生成提示词
+- 调用 xskill API
+- 轮询任务状态
+- 返回图片 URL
+
+**使用方法**：
+```bash
+# 方式 1: 使用环境变量
+TASK_SPEC='{"task_type":"image_generation","style":"cyberpunk"}' \
+bash /home/node/.openclaw/workspace/agents/visual-agent/generate.sh "$TASK_SPEC"
+
+# 方式 2: 直接传入参数
+bash /home/node/.openclaw/workspace/agents/visual-agent/generate.sh '{"task_type":"image_generation","style":"cyberpunk"}'
 ```
 
 ---
 
-## 🔄 调用流程
+## ✅ 验证结果
 
-```
-用户需求
-  ↓
-AI 模型分析（场景识别）
-  ↓
-智能选择模型
-  ↓
-生成图片（visual-generator）
-  ↓
-质量审核（≥ 85 分）
-  ↓
-输出结果
-```
+**测试时间**: 2026-03-12 15:20
+**结果**: ✅ 成功
+**图片 URL**: `https://cdn-video.51sux.com/v3-tasks/2026/03/12/513ee0a49c9a4e4bbfb31544b177eb83.png`
 
 ---
 
-## 📝 质量审核
+## ❌ 禁止行为
 
-**评分标准**:
-- 综合评分 ≥ 85 分
-- 清晰度、风格、尺寸、色彩、科技感
-
-**不及格**: 重新生成（最多 3 次）
+- ❌ 不要在 AGENTS.md 中写长篇 bash 代码
+- ❌ 不要手动构造 curl 命令
+- ❌ 不要尝试在提示词中写轮询逻辑
 
 ---
 
-## 🎯 关键改进（v3.1）
-
-1. ✅ 智能模型选择（AI 决策）
-2. ✅ 多层备用方案
-3. ✅ 质量审核机制
-4. ✅ 统一 API 接口
-
----
-
-**维护者**: Main Agent  
-**版本**: v3.1 - 精简版  
-**最后更新**: 2026-03-09
+**版本**: v13.0
+**最后更新**: 202-2026-03-12
+**核心文件**: /home/node/.openclaw/workspace/agents/visual-agent/generate.sh

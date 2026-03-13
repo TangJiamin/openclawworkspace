@@ -1,0 +1,1 @@
+/home/node/.openclaw/workspace/skills/visual-generator/scripts/xskill_call.sh: line 217: unexpected EOF while looking for matching `"'

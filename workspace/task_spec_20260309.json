@@ -1,0 +1,316 @@
+{
+  "task_id": "task-20260309-hot-content-batch",
+  "task_name": "2026-03-09热点资讯批量生成自媒体内容",
+  "created_at": "2026-03-09T17:32:00+08:00",
+  "created_by": "main-agent",
+  "version": "1.0",
+  
+  "user_requirement": {
+    "original_input": "根据今日（2026-03-09）热点资讯，批量生成小红书和抖音的自媒体内容",
+    "intent": "批量生产时效性强的自媒体内容",
+    "priority": "urgent"
+  },
+
+  "task_specification": {
+    "type": "batch_content_generation",
+    "target_date": "2026-03-09",
+    
+    "hot_topics": [
+      {
+        "topic_id": "hot-001",
+        "title": "2026年全国两会特别报道：政府工作报告亮点",
+        "category": "时政",
+        "trending_score": 98,
+        "keywords": ["两会", "政府工作报告", "民生", "经济发展"],
+        "description": "2026年全国两会召开，政府工作报告提出多项重大政策举措",
+        "source": "综合新闻报道",
+        "publish_time": "2026-03-09"
+      },
+      {
+        "topic_id": "hot-002",
+        "title": "AI大模型GPT-5发布：多模态能力突破性进展",
+        "category": "科技",
+        "trending_score": 95,
+        "keywords": ["GPT-5", "人工智能", "大模型", "多模态"],
+        "description": "OpenAI发布GPT-5，在推理能力和多模态理解方面实现重大突破",
+        "source": "科技媒体报道",
+        "publish_time": "2026-03-09"
+      },
+      {
+        "topic_id": "hot-003",
+        "title": "春季旅游消费复苏：周边游预订量同比增长300%",
+        "category": "生活",
+        "trending_score": 88,
+        "keywords": ["春季旅游", "周边游", "消费复苏", "踏青"],
+        "description": "随着气温回暖，春季旅游市场火爆，周边游成主流选择",
+        "source": "旅游行业报告",
+        "publish_time": "2026-03-09"
+      }
+    ],
+
+    "content_requirements": {
+      "platforms": [
+        {
+          "platform": "xiaohongshu",
+          "platform_name": "小红书",
+          "content_type": "图文",
+          "quantity_per_topic": 1,
+          "total_quantity": 3
+        },
+        {
+          "platform": "douyin",
+          "platform_name": "抖音",
+          "content_type": "视频",
+          "quantity_per_topic": 1,
+          "total_quantity": 3
+        }
+      ],
+      "total_content_pieces": 6
+    },
+
+    "platform_constraints": {
+      "xiaohongshu": {
+        "content_format": "图文",
+        "title_length": {
+          "min": 10,
+          "max": 30,
+          "unit": "字"
+        },
+        "body_length": {
+          "min": 300,
+          "max": 800,
+          "unit": "字"
+        },
+        "style": {
+          "tone": ["轻松活泼", "干货分享", "贴近生活"],
+          "language": "口语化、接地气",
+          "emoji_usage": "适量使用，增强表达",
+          "hashtag_count": {
+            "min": 3,
+            "max": 10
+          }
+        },
+        "structure": {
+          "must_include": ["标题", "正文", "标签"],
+          "optional": ["分割线", "引导关注"],
+          "paragraphs": {
+            "preferred": "短段落，2-4句话",
+            "spacing": "段落间空行"
+          }
+        },
+        "image_requirements": {
+          "count": {
+            "min": 3,
+            "max": 9
+          },
+          "style": "清晰、美观、与内容相关",
+          "format": "4:3 或 1:1",
+          "quality": "高清"
+        }
+      },
+      "douyin": {
+        "content_format": "短视频",
+        "duration": {
+          "min": 30,
+          "max": 90,
+          "unit": "秒"
+        },
+        "style": {
+          "tone": ["快节奏", "吸引力强", "易于传播"],
+          "language": "简洁有力，黄金前3秒",
+          "music": "背景音乐配合节奏",
+          "caption": "字幕清晰，关键信息突出"
+        },
+        "structure": {
+          "must_include": ["开头吸引", "核心内容", "结尾互动"],
+          "opening": "3秒内抓住注意力",
+          "pacing": "节奏紧凑，信息密度高"
+        },
+        "visual_requirements": {
+          "video_quality": "1080p或更高",
+          "aspect_ratio": "9:16 (竖屏)",
+          "style": "画面稳定、剪辑流畅",
+          "text_overlay": "关键信息文字叠加"
+        },
+        "audio_requirements": {
+          "background_music": "符合内容氛围",
+          "voiceover": "清晰有力，语速适中",
+          "sound_effects": "适量使用，增强效果"
+        }
+      }
+    },
+
+    "quality_standards": {
+      "overall": {
+        "minimum_score": 80,
+        "scoring_criteria": ["时效性", "内容质量", "平台适配度", "创意性", "传播潜力"],
+        "pass_threshold": 75
+      },
+      "timeliness": {
+        "weight": 30,
+        "requirement": "必须基于2026-03-09当天热点",
+        "verification": "内容与热点事件紧密相关，时间戳明确"
+      },
+      "content_quality": {
+        "weight": 25,
+        "requirements": {
+          "accuracy": "信息准确，无虚假内容",
+          "value": "提供有用信息或独特观点",
+          "readability": "表达清晰，易于理解"
+        }
+      },
+      "platform_fit": {
+        "weight": 25,
+        "requirements": {
+          "format": "符合平台内容格式规范",
+          "style": "符合平台用户喜好",
+          "optimization": "针对平台算法优化"
+        }
+      },
+      "creativity": {
+        "weight": 10,
+        "requirements": {
+          "originality": "角度独特，避免同质化",
+          "engagement": "设置互动点，提升参与度",
+          "innovation": "形式或内容创新"
+        }
+      },
+      "viral_potential": {
+        "weight": 10,
+        "indicators": ["话题性", "情感共鸣", "分享价值", "讨论热度"]
+      }
+    },
+
+    "workflow": {
+      "phases": [
+        {
+          "phase": "1",
+          "name": "热点确认与资料收集",
+          "agent": "research-agent",
+          "timeout": 120,
+          "output": "hot_topics_detailed",
+          "quality_check": true
+        },
+        {
+          "phase": "2",
+          "name": "内容生成",
+          "agent": "content-agent",
+          "timeout": 180,
+          "output": "content_drafts",
+          "quality_check": true
+        },
+        {
+          "phase": "3",
+          "name": "视觉素材生成",
+          "agent": "visual-agent",
+          "timeout": 120,
+          "output": "visual_assets",
+          "quality_check": true,
+          "parallel": true
+        },
+        {
+          "phase": "4",
+          "name": "视频制作",
+          "agent": "video-agent",
+          "timeout": 180,
+          "output": "video_files",
+          "quality_check": true,
+          "depends_on": ["phase_3"]
+        },
+        {
+          "phase": "5",
+          "name": "最终质量审核",
+          "agent": "quality-agent",
+          "timeout": 60,
+          "output": "final_report",
+          "quality_check": true
+        }
+      ],
+      "total_estimated_time": "8-12分钟",
+      "retry_policy": {
+        "max_retries": 3,
+        "retry_on": ["quality_below_threshold", "agent_failure", "timeout"]
+      }
+    },
+
+    "deliverables": {
+      "content_package": {
+        "xiaohongshu": [
+          {
+            "topic": "hot-001",
+            "files": ["文案.txt", "图片1.jpg", "图片2.jpg", "图片3.jpg"]
+          },
+          {
+            "topic": "hot-002",
+            "files": ["文案.txt", "图片1.jpg", "图片2.jpg", "图片3.jpg"]
+          },
+          {
+            "topic": "hot-003",
+            "files": ["文案.txt", "图片1.jpg", "图片2.jpg", "图片3.jpg"]
+          }
+        ],
+        "douyin": [
+          {
+            "topic": "hot-001",
+            "files": ["脚本.txt", "视频.mp4", "封面.jpg"]
+          },
+          {
+            "topic": "hot-002",
+            "files": ["脚本.txt", "视频.mp4", "封面.jpg"]
+          },
+          {
+            "topic": "hot-003",
+            "files": ["脚本.txt", "视频.mp4", "封面.jpg"]
+          }
+        ]
+      },
+      "report": {
+        "quality_report": "质量审核报告.pdf",
+        "summary": "任务执行总结.md",
+        "metadata": "元数据.json"
+      }
+    },
+
+    "autonomous_decision": {
+      "enabled": true,
+      "scope": [
+        "热点选择与排序",
+        "内容角度切入",
+        "标题和文案优化",
+        "图片风格选择",
+        "视频剪辑风格",
+        "质量改进方案"
+      ],
+      "constraints": [
+        "不得偏离真实热点事实",
+        "不得违反平台内容规范",
+        "不得生成敏感或不当内容",
+        "质量评分不得低于75分"
+      ]
+    },
+
+    "emergency_handling": {
+      "hot_topic_insufficient": {
+        "action": "expand_search_range",
+        "fallback": ["相关领域热点", "历史同期热点", "行业趋势"]
+      },
+      "quality_below_threshold": {
+        "action": "regenerate",
+        "max_attempts": 3
+      },
+      "agent_timeout": {
+        "action": "retry_with_adjusted_params",
+        "escalation": "notify_main_agent"
+      }
+    }
+  },
+
+  "metadata": {
+    "task_type": "batch_content_generation",
+    "complexity": "high",
+    "estimated_completion_time": "2026-03-09T18:00:00+08:00",
+    "priority_level": "urgent",
+    "batch_size": 6,
+    "multi_platform": true
+  }
+}

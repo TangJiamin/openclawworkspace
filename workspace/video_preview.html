@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>抖音视频预览</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    #info {
+      color: white;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    canvas {
+      max-width: 540px;
+      height: auto;
+      border: 2px solid #333;
+      background: #111;
+    }
+    #controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #progress {
+      color: white;
+      margin-left: 20px;
+    }
+    #instructions {
+      color: #888;
+      margin-top: 20px;
+      max-width: 800px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <h2>🎥 抖音视频预览</h2>
+    <p>时长: 40秒 | 帧率: 30fps | 尺寸: 1080x1920</p>
+  </div>
+  
+  <canvas id="canvas"></canvas>
+  
+  <div id="controls">
+    <button id="playBtn">▶️ 播放</button>
+    <button id="pauseBtn">⏸️ 暂停</button>
+    <button id="resetBtn">🔄 重置</button>
+    <span id="progress">0 / 1200</span>
+  </div>
+  
+  <div id="instructions">
+    <strong>💡 如何导出为视频：</strong><br>
+    方法1: 使用屏幕录制软件录制此预览播放<br>
+    方法2: 使用 FFmpeg: <code>ffmpeg -f concat -safe 0 -i video_frames.txt -c:v libx264 -preset fast -crf 23 -r 30 -pix_fmt yuv420p output.mp4</code><br>
+    方法3: 使用视频编辑软件（如 Premiere、Final Cut）导入帧序列<br>
+    方法4: 使用在线工具（如 EZGIF、CloudConvert）将帧序列转换为视频
+  </div>
+  
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const progress = document.getElementById('progress');
+    
+    canvas.width = 1080;
+    canvas.height = 1920;
+    
+    let currentFrame = 0;
+    let isPlaying = false;
+    let animationId = null;
+    let lastTime = 0;
+    const fps = 30;
+    const frameInterval = 1000 / fps;
+    
+    const images = [];
+    const totalFrames = 1200;
+    
+    // 预加载所有帧
+    async function loadFrames() {
+      for (let i = 0; i < totalFrames; i++) {
+        const img = new Image();
+        img.src = 'frames/frame_' + String(i).padStart(6, '0') + '.png';
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = () => {
+            console.error('Failed to load frame:', i);
+            resolve();
+          };
+        });
+        images.push(img);
+        progress.textContent = `加载中: ${i + 1} / ${totalFrames}`;
+      }
+      progress.textContent = `0 / ${totalFrames}`;
+      console.log('All frames loaded!');
+    }
+    
+    function drawFrame(frameIndex) {
+      if (frameIndex >= 0 && frameIndex < images.length && images[frameIndex]) {
+        ctx.drawImage(images[frameIndex], 0, 0);
+        progress.textContent = `${frameIndex + 1} / ${totalFrames}`;
+      }
+    }
+    
+    function animate(currentTime) {
+      if (!isPlaying) return;
+      
+      if (currentTime - lastTime >= frameInterval) {
+        drawFrame(currentFrame);
+        currentFrame++;
+        lastTime = currentTime;
+        
+        if (currentFrame >= totalFrames) {
+          currentFrame = 0; // Loop
+        }
+      }
+      
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    playBtn.addEventListener('click', () => {
+      if (!isPlaying) {
+        isPlaying = true;
+        lastTime = performance.now();
+        animate(lastTime);
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      }
+    });
+    
+    pauseBtn.addEventListener('click', () => {
+      isPlaying = false;
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
+    });
+    
+    resetBtn.addEventListener('click', () => {
+      isPlaying = false;
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      currentFrame = 0;
+      drawFrame(0);
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
+    });
+    
+    // 初始化
+    loadFrames().then(() => {
+      drawFrame(0);
+      pauseBtn.disabled = true;
+    }).catch(err => {
+      console.error('Error loading frames:', err);
+      progress.textContent = '加载帧时出错';
+    });
+  </script>
+</body>
+</html>

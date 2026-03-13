@@ -1,0 +1,1 @@
+{"code":200,"message":"任务创建成功（通道: api）","data":{"task_id":"a00d0963-9689-4415-8475-17ea326d9c46","request_id":"926c890b-e5b0-489c-8e7a-7eaf77a4bb5c","model":"jimeng-5.0","channel":"api","status":"pending","price":2,"balance":457526,"output":null}}

@@ -1,0 +1,98 @@
+{
+  "topic": "春季旅游消费",
+  "platform": "小红书",
+  "style": "春日、明亮、活力感",
+  "total_images": 7,
+  "tool": "Seedance",
+  "images": [
+    {
+      "type": "封面",
+      "description": "樱花盛开的美景，粉色花瓣漫天飞舞，蓝天白云，日系清新风格，广角风景摄影",
+      "size": "1080x1260",
+      "style_params": {
+        "art_style": "风景摄影",
+        "color_tone": "粉色+天蓝",
+        "lighting": "自然阳光",
+        "quality": "超高清",
+        "aspect_ratio": "3:4"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "年轻女性在花海中漫步，穿着春装，手持相机，旅行Vlog风格，人像摄影",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "旅行摄影",
+        "color_tone": "明亮鲜艳",
+        "lighting": "自然逆光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "春日野餐场景，野餐垫、美食、鲜花，草地背景，生活方式摄影，俯拍",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "生活方式",
+        "color_tone": "温暖明亮",
+        "lighting": "自然柔光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "古镇春色，白墙黛瓦，桃花盛开，江南水乡风格，风景摄影",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "风景摄影",
+        "color_tone": "柔和粉彩",
+        "lighting": "清晨柔光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "登山步道，春日绿意，远山如黛，户外运动风格，广角镜头",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "户外摄影",
+        "color_tone": "绿色为主",
+        "lighting": "明亮阳光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "网红打卡地，咖啡店露台，鲜花装饰，城市春日风情，手机摄影风格",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "城市生活方式",
+        "color_tone": "明亮清新",
+        "lighting": "自然光",
+        "quality": "高清",
+        "aspect_ratio": "1:1"
+      }
+    },
+    {
+      "type": "内图",
+      "description": "春日美食，草莓蛋糕、樱花饮料，精致摆盘，美食摄影，俯拍特写",
+      "size": "1080x1080",
+      "style_params": {
+        "art_style": "美食摄影",
+        "color_tone": "粉嫩色调",
+        "lighting": "柔光箱",
+        "quality": "超高清",
+        "aspect_ratio": "1:1"
+      }
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-03-09T17:39:00+08:00",
+    "purpose": "小红书内容配图",
+    "tags": ["春季", "旅游", "樱花", "踏青", "生活"]
+  }
+}

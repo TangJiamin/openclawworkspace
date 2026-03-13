@@ -8,6 +8,10 @@
     "proactive-agent": {
       "version": "3.1.0",
       "installedAt": 1772844555648
+    },
+    "openclaw-tavily-search": {
+      "version": "0.1.0",
+      "installedAt": 1773236106489
     }
   }
 }

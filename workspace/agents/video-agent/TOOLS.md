@@ -49,6 +49,67 @@
 - **调用时机**: 阶段1，每次都会调用
 - **必需**: ✅ 必需
 
+---
+
+### xskill.ai MCP Server（阶段2 - 视频生成）⭐⭐⭐⭐⭐ **新增**
+
+**类型**: MCP 协议视频生成
+**用途**: Seedance 视频生成（MCP 方式）
+**MCP 工具**: `submit_task`
+
+#### 可用模型
+
+**1. v1.5 Pro 文生视频（带音频）** ⭐⭐⭐⭐⭐
+- **模型 ID**: `fal-ai/bytedance/seedance/v1.5/pro/text-to-video`
+- **特性**: 原生音频生成、唇形同步、电影级摄像机
+- **分辨率**: 480p/720p/1080p
+- **时长**: 4-12 秒
+- **计费**: 10-47积分/秒
+
+**2. v1.5 Pro 图生视频（带音频）** ⭐⭐⭐⭐⭐
+- **模型 ID**: `fal-ai/bytedance/seedance/v1.5/pro/image-to-video`
+- **特性**: 首帧图生视频、音频生成
+- **分辨率**: 480p/720p
+- **计费**: 10-21积分/秒
+
+**3. Pro Fast 首帧图生视频** ⭐⭐⭐⭐
+- **模型 ID**: `fal-ai/bytedance/seedance/v1/pro/fast/image-to-video`
+- **特性**: 高性能低成本
+- **分辨率**: 480p/720p/1080p
+- **计费**: 5-20积分/秒
+
+**4. Lite 参考图生视频** ⭐⭐⭐⭐
+- **模型 ID**: `fal-ai/bytedance/seedance/v1/lite/reference-to-video`
+- **特性**: 人物一致性更强
+- **分辨率**: 480p/720p
+- **计费**: 8-15积分/秒
+
+#### MCP 调用方式
+
+```json
+{
+  "model_id": "fal-ai/bytedance/seedance/v1.5/pro/text-to-video",
+  "parameters": {
+    "prompt": "{{用户提示词}}",
+    "resolution": "720p",
+    "duration": "5",
+    "generate_audio": true
+  }
+}
+```
+
+**优势**:
+- ✅ AI Agent 自主调用
+- ✅ 专家级提示词
+- ✅ 跨平台兼容
+- ✅ 已包含音频生成
+
+**对比 API 方式**:
+- API 方式: 手动编写提示词、需要编程
+- MCP 方式: AI 自主调用、专家级提示词
+
+**集成状态**: ✅ 已学习，准备集成
+
 ### agent-canvas-confirm（阶段2 - 可选生产工具）
 - **类型**: 可视化工作流工具
 - **用途**: Refly Canvas 可视化工作流

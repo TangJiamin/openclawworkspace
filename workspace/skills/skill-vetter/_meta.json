@@ -1,0 +1,21 @@
+{
+  "name": "skill-vetter",
+  "version": "1.0.0",
+  "description": "Security-first vetting protocol for AI agent skills. Four-step workflow: source check, code review, permission scope, and risk classification.",
+  "author": "OpenClaw Community",
+  "source": "LobeHub (openclaw-skills/skill-vetter)",
+  "rating": 5.0,
+  "downloads": "1.9k",
+  "reviews": 27,
+  "keywords": ["security", "vetting", "code-review", "safety"],
+  "category": "security",
+  "license": "MIT",
+  "permissions": {
+    "files": ["read"],
+    "network": ["none"],
+    "commands": ["none"]
+  },
+  "riskLevel": "🟢 LOW",
+  "verdict": "✅ SAFE TO INSTALL",
+  "notes": "Docs-only package (SKILL.md + _meta.json), no executable code, no red flags."
+}

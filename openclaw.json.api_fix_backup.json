@@ -1,0 +1,361 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.1",
+    "lastTouchedAt": "2026-03-11T06:35:36.824Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-06T03:30:32.953Z",
+    "lastRunVersion": "2026.2.6-3",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "update": {
+    "checkOnStart": false
+  },
+  "browser": {
+    "executablePath": "/usr/bin/chromium",
+    "headless": true,
+    "noSandbox": true,
+    "defaultProfile": "openclaw"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "default": {
+        "baseUrl": "https://open.bigmodel.cn/api/anthropic",
+        "apiKey": "97c45b5ead4dbb33c7d3771f2018c4d7.ZfTUteXnyQ400hT6",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "glm-4.7",
+            "name": "glm-4.7",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      },
+      "minimax": {
+        "baseUrl": "https://api.minimaxi.com/anthropic",
+        "apiKey": "sk-cp-AweoE6r4oZqcb6reK5AGX335fvl6LWtI4isYaHddlbqdgauU2AC-4N_rTm0vmTXncMxlnvv1KeRnIcw5yEaECJTZI8CDI7iVR7T-k4j-Qx51Vgh-0KGmBmg",
+        "api": "anthropic-messages",
+        "authHeader": true,
+        "models": [
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "MiniMax-M2.5-Lightning",
+            "name": "MiniMax M2.5 Lightning",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "MiniMax-VL-01",
+            "name": "MiniMax VL 01",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "default/glm-4.7"
+      },
+      "imageModel": {
+        "primary": "default/glm-4.7"
+      },
+      "models": {
+        "default/glm-4.7": {},
+        "minimax/MiniMax-M2.5": {
+          "alias": "mm-pro"
+        },
+        "minimax/MiniMax-VL-01": {
+          "alias": "mm-vl"
+        },
+        "minimax/MiniMax-M2.5-Lightning": {
+          "alias": "mm-fast"
+        }
+      },
+      "workspace": "/home/node/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "elevatedDefault": "full",
+      "heartbeat": {
+        "every": "12h",
+        "session": "agent:main:feishu:dm:ou_42097cc9852e3aae3de5893b96a67219",
+        "target": "feishu",
+        "to": "user:ou_42097cc9852e3aae3de5893b96a67219",
+        "accountId": "default"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      },
+      "sandbox": {
+        "mode": "off"
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "subagents": {
+          "allowAgents": [
+            "requirement-agent",
+            "research-agent",
+            "content-agent",
+            "visual-agent",
+            "video-agent",
+            "quality-agent"
+          ]
+        }
+      },
+      {
+        "id": "requirement-agent",
+        "name": "需求理解",
+        "workspace": "/home/node/.openclaw/workspace/agents/requirement-agent",
+        "agentDir": "/home/node/.openclaw/agents/requirement-agent",
+        "model": "minimax/MiniMax-M2.5-Lightning",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "research-agent",
+        "name": "资料收集",
+        "workspace": "/home/node/.openclaw/workspace/agents/research-agent",
+        "agentDir": "/home/node/.openclaw/agents/research-agent",
+        "model": "minimax/MiniMax-M2.5-Lightning",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "content-agent",
+        "name": "内容生成",
+        "workspace": "/home/node/.openclaw/workspace/agents/content-agent",
+        "agentDir": "/home/node/.openclaw/agents/content-agent",
+        "model": "minimax/MiniMax-M2.5",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "visual-agent",
+        "name": "图片生成",
+        "workspace": "/home/node/.openclaw/workspace/agents/visual-agent",
+        "agentDir": "/home/node/.openclaw/agents/visual-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "video-agent",
+        "name": "视频生成",
+        "workspace": "/home/node/.openclaw/workspace/agents/video-agent",
+        "agentDir": "/home/node/.openclaw/agents/video-agent",
+        "model": "minimax/MiniMax-M2.5-Lightning",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "quality-agent",
+        "name": "质量审核",
+        "workspace": "/home/node/.openclaw/workspace/agents/quality-agent",
+        "agentDir": "/home/node/.openclaw/agents/quality-agent",
+        "model": "minimax/MiniMax-M2.5",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      },
+      {
+        "id": "smart-cleaner-agent",
+        "name": "智能清理",
+        "workspace": "/home/node/.openclaw/workspace/agents/smart-cleaner-agent",
+        "agentDir": "/home/node/.openclaw/agents/smart-cleaner-agent",
+        "model": "default/glm-4.7",
+        "subagents": {
+          "allowAgents": [
+            "main"
+          ]
+        }
+      }
+    ]
+  },
+  "tools": {
+    "agentToAgent": {
+      "enabled": true
+    },
+    "profile": "full",
+    "sessions": {
+      "visibility": "all"
+    },
+    "fs": {
+      "workspaceOnly": true
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions",
+    "tts": {
+      "edge": {
+        "voice": "zh-CN-XiaoxiaoNeural"
+      }
+    }
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer",
+    "resetTriggers": [
+      "/new",
+      "/reset"
+    ]
+  },
+  "channels": {
+    "defaults": {
+      "heartbeat": {
+        "showOk": false,
+        "showAlerts": true,
+        "useIndicator": true
+      }
+    },
+    "feishu": {
+      "enabled": true,
+      "domain": "feishu",
+      "connectionMode": "websocket",
+      "sessions": {
+        "mode": "peer",
+        "defaultAgent": "main"
+      },
+      "accounts": {
+        "default": {
+          "appId": "cli_a92e467bd3f8dcc6",
+          "appSecret": "NGzOhxXnRmAlTNzIsPR1ZbljjkcueZhT",
+          "botName": "OpenClaw Bot"
+        }
+      },
+      "dmPolicy": "open",
+      "groupPolicy": "open",
+      "allowFrom": [
+        "*"
+      ],
+      "streaming": true,
+      "footer": {
+        "elapsed": true,
+        "status": true
+      },
+      "requireMention": true
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "allowedOrigins": [
+        "http://localhost:18789"
+      ],
+      "allowInsecureAuth": true,
+      "dangerouslyDisableDeviceAuth": false
+    },
+    "auth": {
+      "mode": "token",
+      "token": "123456"
+    }
+  },
+  "plugins": {
+    "allow": [
+      "feishu"
+    ],
+    "entries": {
+      "feishu": {
+        "enabled": true
+      },
+      "feishu-openclaw-plugin": {
+        "enabled": false
+      }
+    },
+    "installs": {
+      "feishu": {
+        "source": "npm",
+        "spec": "@openclaw/feishu",
+        "installPath": "/home/node/.openclaw/extensions/feishu",
+        "version": "2026.3.7",
+        "resolvedName": "@openclaw/feishu",
+        "resolvedVersion": "2026.3.7",
+        "resolvedSpec": "@openclaw/feishu@2026.3.7",
+        "integrity": "sha512-CHPcL+WHYKYR2HJKRYsRtlXx/wbQRy5axltjjH9qXkR8ghxygDmOHZREjxyFEbjFJ3wnIuvgjLE7JYTg3nPpDA==",
+        "shasum": "c4b31dbe2ff0bc7034334873482ad18ac60a0767",
+        "resolvedAt": "2026-03-11T03:32:43.155Z",
+        "installedAt": "2026-03-11T03:32:53.109Z"
+      }
+    },
+    "enabled": true
+  }
+}

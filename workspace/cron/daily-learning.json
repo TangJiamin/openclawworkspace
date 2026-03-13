@@ -8,7 +8,7 @@
   },
   "payload": {
     "kind": "systemEvent",
-    "text": "执行每日学习任务：\n\nStep 1: 每日总结\n- 运行 /home/node/.openclaw/workspace/scripts/daily-summary.sh\n- 提取今日关键决策、学到的新能力、遇到的问题、改进\n- 生成明日学习方向建议\n\nStep 2: 基于总结进行学习\n- 检查现有能力（去重检查）\n- 发现新能力（OpenClaw更新、ClawHub新技能、GitHub开源项目）\n- 评估集成价值\n- 记录重要发现\n\n注意：只在有重要发现时生成报告，否则静默完成",
+    "text": "执行每日学习任务：\n\nStep 1: 每日总结\n- 运行 /home/node/.openclaw/workspace/scripts/daily-summary.sh\n- 提取今日关键决策、学到的新能力、遇到的问题、改进\n- 生成明日学习方向建议\n\nStep 2: 基于总结进行学习\n优先级顺序：\n1. **LobeHub**（199,026 技能，5.0 分制）\n   - 访问：https://lobehub.com/zh/skills?sort=ratingAverage\n   - 重点：评分 4.8+ 的技能\n   - 分类：AI & 大模型、编程 Agent & IDE、效率提升\n2. **ClawHub**（3,000+ 技能）\n   - 搜索：npx clawhub@latest search <query>\n   - 重点：评分 3.5+ 的技能\n3. **GitHub**（无限）\n   - 搜索高 Star 项目\n   - 重点：README.md 清晰的项目\n\n检查现有能力（去重检查）→ 发现新能力 → 评估集成价值 → 记录重要发现\n\n注意：只在有重要发现时生成报告，否则静默完成",
     "context": "daily-learning"
   },
   "delivery": {

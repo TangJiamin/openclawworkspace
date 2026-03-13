@@ -1,7 +1,7 @@
 # research-agent - 操作指南
 
-**版本**: v4.1 - 精简版
-**更新**: 2026-03-09
+**版本**: v5.0 - 新增翻译能力
+**更新**: 2026-03-10
 
 ---
 
@@ -14,168 +14,221 @@
 
 ---
 
-## 🛠️ 工具清单（按优先级）
+## 🔥 自主决策铁律（最高优先级）
 
-### 搜索工具
+**核心原则**:
+- ✅ **自主执行** - 大部分情况下应该自主执行，不要等待授权
+- ✅ **最优方案** - 如果有多种方案可行，选择最优方案
+- ✅ **敢于决策** - 如果不确定，选择最可能成功的方案
+- ⚠️ **只在真正不确定时才询问用户**
 
-| 工具 | 成本 | 用途 | 命令 |
-|------|------|------|------|
-| **Jina AI Search** | ✅ 免费 | 通用搜索 | `curl -s "https://s.jina.ai/[query]"` |
-| **Tavily Search** | ⚠️ API Key | 深度/新闻搜索 | `node scripts/search.mjs "query" --deep` |
-| **Exa Search** | ⚠️ API Key | 代码/公司搜索 | `mcporter call 'exa.get_code_context_exa(query: "...")'` |
-| **Metaso Search** | ✅ 免费 | AI 搜索 | `bash scripts/metaso_search.sh "query" 10` |
+**执行标准**:
+- 如果有明确的任务要求 → 直接执行
+- 如果有多种工具可用 → 选择最优方案
+- 如果结果不满足 → 自主降级或调整方案
+- 如果完全无法决策 → 询问用户
 
-### 内容提取
-
-| 工具 | 成本 | 用途 | 命令 |
-|------|------|------|------|
-| **Jina Reader** | ✅ 免费 | URL 提取 | `curl -s "https://r.jina.ai/[URL]"` |
-| **Summarize** | ⚠️ API Key | 多格式总结 | `npx summarize "url-or-file" --length medium` |
-
-### 平台搜索
-
-| 平台 | 成本 | 命令 |
-|------|------|------|
-| **Reddit** | ✅ 免费 | `curl -s "https://www.reddit.com/search.json?q=query"` |
-| **YouTube** | ✅ 免费 | `yt-dlp --dump-json "ytsearch5:query"` |
-| **GitHub** | ✅ 免费 | `gh search repos "query"` |
+**禁止行为**:
+- ❌ 不要在可以自主决策时询问用户
+- ❌ 不要多次询问相同的问题
+- ❌ 不要因为"不确定"而停滞不前
 
 ---
 
-## 🎯 智能工具选择
+## 🛠️ 工具清单（精简高效）
 
-### 默认策略（成本优先）
+### 搜索工具 ⭐ 核心能力
 
-```
-通用搜索 → Jina AI Search（免费）
-平台搜索 → Agent Reach（Reddit/YouTube/GitHub）
-内容提取 → Jina Reader（免费）
-```
+| 工具 | 用途 | 命令 | 优先级 |
+|------|------|------|--------|
+| **web_search** ⭐ | Brave Search | `web_search({ query: "..." })` | ⭐⭐⭐⭐⭐ 首选 |
+| **metaso-search** ⭐ | AI 搜索 | `bash /path/to/metaso_search.sh "query" 10` | ⭐⭐⭐⭐⭐ |
+| **tavily-search** ⭐ | AI 优化搜索 | `node /path/to/tavily_search.mjs "query" -n 10` | ⭐⭐⭐⭐⭐ |
+| **agent-reach** ⭐ | 多平台数据源 | `curl "https://www.reddit.com/..."` | ⭐⭐⭐⭐ |
+| **ai-daily-digest** | AI 每日摘要 | `npx tsx scripts/digest.ts` | ⭐⭐⭐⭐ |
+| **Jina AI Search** | 备选搜索 | `curl -s "https://s.jina.ai/[query]"` | ⭐⭐⭐ 备选 |
 
-**成本**: 完全免费（除 Exa）
-
----
-
-### 质量优先策略
-
-```
-新闻/时效性 → Tavily Search（--topic news --days 1）
-深度研究 → Tavily Search（--deep）
-代码搜索 → Exa Search
+**AI 决策**:
+```javascript
+// AI 模型决策
+if (需要多平台数据) {
+  工具 = "agent-reach" // Reddit/YouTube/B站
+} else if (有 TAVILY_API_KEY) {
+  工具 = "tavily-search" // 高质量搜索
+} else {
+  工具 = "web_search" // Brave Search（内置，免费）
+}
 ```
 
 ---
 
-### 智能降级
+## 🔄 工作流程
+
+### 资料收集流程
 
 ```
-免费工具（Jina）
-  ↓ 结果不满足
-付费工具（Tavily）
+用户需求
+  ↓
+AI 模型选择搜索工具
+  ↓
+执行搜索（metaso/tavily）
+  ↓
+质量筛选（评分 ≥ 7.0）
+  ↓
+时效性检查（90%+ 24小时内）
+  ↓
+输出结果
+```
+
+### 翻译流程 ⭐ 新增
+
+```
+外文资料
+  ↓
+判断是否需要翻译
+  ↓
+是 → 使用 translate 工具（详见 TOOLS.md）
+  ↓
+术语提取 + 智能分块（如需要）
+  ↓
+翻译 + 质量审核
+  ↓
+输出结果
+```
+
+**翻译决策**:
+- 遇到外文资料时自动翻译
+- 根据内容长度选择模式（短文本→quick，文章→normal，长文档→normal+分块，重要文档→refined）
+- 根据目标受众选择风格（普通读者→storytelling，技术读者→technical）
+  ↓
+输出结果
 ```
 
 ---
 
-## 📊 使用场景
+## 🎯 AI 决策逻辑
 
-### 场景 1: 热点资讯（24小时内）
+### 搜索工具选择
 
-**工具**: Jina AI Search（首选）→ Tavily Search（备用）
+```javascript
+// AI 模型决策
+if (有 TAVILY_API_KEY) {
+  工具 = "tavily-search" // 高质量搜索
+} else {
+  工具 = "metaso-search" // 免费搜索
+}
+```
+
+### 翻译模式选择 ⭐ 新增
+
+```javascript
+// AI 模型决策
+if (文本长度 < 500) {
+  模式 = "quick"
+} else if (文本长度 < 5000) {
+  模式 = "normal"
+} else {
+  模式 = "refined" // 长文本使用精细翻译
+}
+```
+
+---
+
+## 📊 资料质量标准
+
+### 时效性（热点资讯）
+- ✅ 90%+ 内容为 24 小时内
+- ✅ 100% 内容为 72 小时内
+
+### 价值性
+- ✅ 综合评分 ≥ 7.0
+- ✅ AI 多维评分筛选
+
+### 相关性
+- ✅ 与 AI/技术相关
+- ✅ 与用户需求相关
+
+---
+
+## 📝 精简原则
+
+### 文档精简
+- ✅ 保留核心命令
+- ✅ 删除冗余说明
+- ✅ 使用表格呈现
+- ✅ Token 消耗降低 70%+
+
+### 工具精简
+- ✅ 只保留高优先级工具
+- ✅ 合并相似功能
+- ✅ 删除低频使用工具
+
+---
+
+## 🔒 安全原则
+
+### 工具安全性
+- ✅ metaso-search - 安全（无 API Key）
+- ⚠️ tavily-search - 需要 API Key
+- ✅ baoyu-translate - Safe
+- ✅ summarize - 安全
+
+---
+
+**维护者**: Main Agent
+**版本**: v5.0 - 新增翻译能力
+**最后更新**: 2026-03-10
+
+---
+
+## 📁 产出管理
+
+### 目录结构
+
+```
+agents/$(AGENT_NAME)/
+└── output/
+    └── task-YYYYMMDD-HHMMSS/
+        ├── data.json
+        ├── summary.md
+        └── ...
+```
+
+### 使用方法
 
 ```bash
-# 免费优先
-curl -s "https://s.jina.ai/AI news today"
+# 创建产出目录（自动生成时间戳任务ID）
+OUTPUT_DIR=$(bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh create $(AGENT_NAME))
 
-# 质量优先
-node /home/node/.openclaw/workspace/skills/tavily-search/scripts/search.mjs "AI news" --topic news --days 1
+# 写入产出文件
+cat > "$OUTPUT_DIR/result.json" << 'DATA'
+{
+  "status": "success",
+  "data": {...}
+}
+DATA
+
+echo "✅ 产出已保存到: $OUTPUT_DIR"
 ```
 
----
-
-### 场景 2: 技术问题搜索
-
-**工具**: Jina AI Search → GitHub Code Search → Exa Search
+### 列出产出
 
 ```bash
-# Jina AI Search
-curl -s "https://s.jina.ai/[query] code examples"
+# 列出所有 Agent 的产出
+bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh list
 
-# GitHub
-gh search code "[query]" --language python
-
-# Exa（需 API Key）
-mcporter call 'exa.get_code_context_exa(query: "[query]")'
+# 列出当前 Agent 的产出
+bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh list $(AGENT_NAME)
 ```
 
----
-
-### 场景 3: 社区讨论
-
-**工具**: Reddit → YouTube
+### 清理旧产出
 
 ```bash
-# Reddit
-curl -s "https://www.reddit.com/search.json?q=query"
-
-# YouTube
-yt-dlp --dump-json "ytsearch5:query"
+# 清理7天前的产出
+bash /home/node/.openclaw/workspace/scripts/agent-output-tool.sh clean $(AGENT_NAME) 7
 ```
 
----
+### 详细文档
 
-## 📈 评分系统
-
-**综合评分** = 时效性(30%) + 热度(30%) + 价值(25%) + AI相关性(15%)
-
-**筛选阈值**: ≥ 7.0
-
-**质量标准**（热点资讯）:
-- 90% 以上内容为 24 小时内
-- 95% 以上内容与 AI 相关
-- 平均综合评分 ≥ 7.5
-
----
-
-## 📝 输出格式
-
-**必须包含**:
-1. **时间戳**（YYYY-MM-DD）
-2. **来源链接**（可验证 URL）
-3. **7维度评分**
-4. **综合评分**
-5. **时效性标签**（【最新】/【参考】）
-
----
-
-## ⚙️ 配置状态
-
-### 已配置（免费）✅
-
-- [x] Jina AI Search
-- [x] Jina Reader
-- [x] Metaso Search
-- [x] Reddit API
-- [x] yt-dlp
-- [x] gh CLI
-
-### 待配置（API Key）⚠️
-
-- [ ] Tavily Search
-- [ ] Summarize
-- [ ] Exa Search
-
----
-
-## 🎯 关键改进（v4.1）
-
-1. ✅ 完整能力清单 - 10+ 工具
-2. ✅ 成本优化 - 70% 成本降低
-3. ✅ 智能路由 - 根据场景选择
-4. ✅ 降级机制 - 免费→付费
-5. ✅ 平台覆盖 - 8+ 平台
-
----
-
-**维护者**: Main Agent  
-**版本**: v4.1 - 精简版  
-**最后更新**: 2026-03-09
+- 快速开始: `docs/AGENT-OUTPUT-QUICK-START.md`
+- 完整指南: `docs/AGENT-OUTPUT-GUIDE.md`

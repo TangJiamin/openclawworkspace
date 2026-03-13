@@ -1,10 +1,6 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-/**
- * DingTalk configuration schema using Zod
- * Mirrors the structure needed for proper control-ui rendering
- */
-export const DingTalkConfigSchema = z.object({
+const DingTalkAccountConfigSchema = z.object({
   /** Account name (optional display name) */
   name: z.string().optional(),
 
@@ -27,22 +23,27 @@ export const DingTalkConfigSchema = z.object({
   agentId: z.union([z.string(), z.number()]).optional(),
 
   /** Direct message policy: open, pairing, or allowlist */
-  dmPolicy: z.enum(['open', 'pairing', 'allowlist']).optional().default('open'),
+  dmPolicy: z.enum(["open", "pairing", "allowlist"]).optional().default("open"),
 
   /** Group message policy: open or allowlist */
-  groupPolicy: z.enum(['open', 'allowlist']).optional().default('open'),
+  groupPolicy: z.enum(["open", "allowlist"]).optional().default("open"),
 
   /** List of allowed user IDs for allowlist policy */
   allowFrom: z.array(z.string()).optional(),
 
-  /** Show thinking indicator while processing */
+  mediaUrlAllowlist: z.array(z.string()).optional(),
+
+  /** Show thinking indicator while processing (markdown mode only) */
   showThinking: z.boolean().optional().default(true),
+
+  /** Custom thinking message content when showThinking is enabled (markdown mode only) */
+  thinkingMessage: z.string().optional().default("🤔 思考中，请稍候..."),
 
   /** Enable debug logging */
   debug: z.boolean().optional().default(false),
 
   /** Message type for replies: markdown or card */
-  messageType: z.enum(['markdown', 'card']).optional().default('markdown'),
+  messageType: z.enum(["markdown", "card"]).optional().default("markdown"),
 
   /** Card template ID for AI interactive cards
    * obtain the template ID from DingTalk Developer Console.
@@ -51,10 +52,10 @@ export const DingTalkConfigSchema = z.object({
   cardTemplateId: z.string().optional(),
 
   /** Card template key for streaming updates
-   * Default: 'msgContent' - maps to the content field in the card template
+   * Default: 'content' - maps to the content field in the card template
    * This key is used in the streaming API to update specific fields in the card.
    */
-  cardTemplateKey: z.string().optional().default('content'),
+  cardTemplateKey: z.string().optional().default("content"),
 
   /** Per-group configuration, keyed by conversationId (supports "*" wildcard) */
   groups: z
@@ -62,12 +63,9 @@ export const DingTalkConfigSchema = z.object({
       z.string(),
       z.object({
         systemPrompt: z.string().optional(),
-      })
+      }),
     )
     .optional(),
-
-  /** Multi-account configuration */
-  accounts: z.record(z.string(), z.lazy(() => DingTalkConfigSchema)).optional(),
 
   /** Connection robustness configuration */
 
@@ -82,6 +80,32 @@ export const DingTalkConfigSchema = z.object({
 
   /** Jitter factor for reconnection delay randomization (0-1, default: 0.3) */
   reconnectJitter: z.number().min(0).max(1).optional().default(0.3),
+
+  /** Maximum number of runtime reconnect cycles before giving up (default: 10) */
+  maxReconnectCycles: z.number().int().min(1).optional().default(10),
+
+  /** Whether to use ConnectionManager (default: true). When false, rely on DWClient native keepAlive+autoReconnect. */
+  useConnectionManager: z.boolean().optional().default(true),
+
+  /** Maximum inbound media file size in MB (overrides runtime default when set) */
+  mediaMaxMb: z.number().int().min(1).optional(),
+
+  proactivePermissionHint: z
+    .object({
+      enabled: z.boolean().optional().default(true),
+      cooldownHours: z.number().int().min(1).max(24 * 30).optional().default(24),
+    })
+    .optional()
+    .default({ enabled: true, cooldownHours: 24 }),
+});
+
+/**
+ * DingTalk configuration schema using Zod
+ * Mirrors the structure needed for proper control-ui rendering
+ */
+export const DingTalkConfigSchema: z.ZodTypeAny = DingTalkAccountConfigSchema.extend({
+  /** Multi-account configuration */
+  accounts: z.record(z.string(), DingTalkAccountConfigSchema.optional()).optional(),
 });
 
 export type DingTalkConfig = z.infer<typeof DingTalkConfigSchema>;
